@@ -4,14 +4,14 @@ var DOMParser = require("xmldom").DOMParser;
 (function(exports) {
     function parseLayers(that) {
         var root = that.dom.documentElement;
-        var layers = root.getElementsByTagName("layer");
-        that.$layers = {};
-        for (var i=0; i < layers.length; i++) {
-            var layer = layers.item(i);
+        var domlayers = root.getElementsByTagName("layer");
+        var layers = {};
+        for (var i=0; i < domlayers.length; i++) {
+            var layer = domlayers.item(i);
             var number = layer.getAttribute("number");
             var name = layer.getAttribute("name");
             //console.log("layer number:"+number, "name:"+name);
-            that.$layers[number] = that.$layers[name] = {
+            layers[number] = layers[name] = {
                 number: number,
                 name: name,
                 color: layer.getAttribute("color"),
@@ -20,6 +20,7 @@ var DOMParser = require("xmldom").DOMParser;
                 active: layer.getAttribute("active") || "active",
             };
         }
+        return layers;
     }//parseLayers
     function parseWires(that, domparent) {
         var domwires = domparent.getElementsByTagName("wire");
@@ -52,21 +53,43 @@ var DOMParser = require("xmldom").DOMParser;
         }
         return rectangles;
     }//parseRectangles
+    function parseElements(that) {
+        var root = that.dom.documentElement;
+        var domelts = root.getElementsByTagName("element");
+        var elements = {};
+        for (var iElt = 0; iElt < domelts.length; iElt++) {
+            var domelt = domelts.item(iElt);
+            var name = domelt.getAttribute("name");
+            elements[name] = {
+                name: name,
+                library: domelt.getAttribute("library"),
+                package: domelt.getAttribute("package"),
+                x: domelt.getAttribute("x"),
+                y: domelt.getAttribute("y"),
+                rot: domelt.getAttribute("rot"),
+                //UNUSED value: domelt.getAttribute("value"),
+                //UNUSED locked: domelt.getAttribute("locked"),
+            }
+        }
+        return elements;
+    }//parseElements
     function parsePlain(that) {
         var root = that.dom.documentElement;
         var elts = root.getElementsByTagName("plain");
         var domplain = elts.length ? elts.item(0) : null;
-        that.$plain = {};
-        domplain && (that.$plain.rectangle = parseRectangles(that, domplain));
-        domplain && (that.$plain.wire = parseWires(that, domplain));
-        return that;
+        var plain = {};
+        if (domplain) {
+            plain.rectangle = parseRectangles(that, domplain);
+            plain.wire = parseWires(that, domplain);
+        }
+        return plain;
     }//parsePlain
     function parseLibraries(that) {
         var root = that.dom.documentElement;
-        var libraries = root.getElementsByTagName("library");
-        that.$libraries = {};
-        for (var iLib=0; iLib < libraries.length; iLib++) {
-            var library = libraries.item(iLib);
+        var domlibraries = root.getElementsByTagName("library");
+        var libraries = {};
+        for (var iLib=0; iLib < domlibraries.length; iLib++) {
+            var library = domlibraries.item(iLib);
             var name = library.getAttribute("name");
             //console.log("library name:"+name);
             var dompackages = library.getElementsByTagName("package");
@@ -95,12 +118,12 @@ var DOMParser = require("xmldom").DOMParser;
                     wire: parseWires(that, dompackage),
                 };
             }
-            that.$libraries[name] = {
+            libraries[name] = {
                 name: name,
                 packages: packages,
             };
         }
-        return that;
+        return libraries;
     }// parseLibraries
 
     ////////////////// constructor
@@ -110,9 +133,10 @@ var DOMParser = require("xmldom").DOMParser;
         options = options || {};
         var parser = new DOMParser();
         that.dom = parser.parseFromString(brd);
-        parsePlain(that);
-        parseLayers(that);
-        parseLibraries(that);
+        that.$plain = parsePlain(that);
+        that.$layers = parseLayers(that);
+        that.$libraries = parseLibraries(that);
+        that.$elements = parseElements(that);
 
         return that;
     }
@@ -122,7 +146,7 @@ var DOMParser = require("xmldom").DOMParser;
     }
     EagleBRD.prototype.getLibrary = function(name) {
         var that = this;
-        return that.$libraries && that.$libraries[name];
+        return that.$libraries[name];
     }
     EagleBRD.prototype.getPackage = function(libname,pkgname) {
         var that = this;
@@ -132,6 +156,10 @@ var DOMParser = require("xmldom").DOMParser;
     EagleBRD.prototype.getPlain = function() {
         var that = this;
         return that.$plain;
+    }
+    EagleBRD.prototype.getElements = function() {
+        var that = this;
+        return that.$elements;
     }
 
     module.exports = exports.EagleBRD = EagleBRD;
@@ -179,6 +207,10 @@ var DOMParser = require("xmldom").DOMParser;
         '\t\t\t</packages>\n'+
         '\t\t</library>\n'+
         '\t</libraries>\n'+
+        '\t<elements>\n'+
+        '\t\t<element name="E$16" library="Reference Ruler" package="0201" value="" x="19.05" y="10.4648" rot="R90"/>\n'+
+        '\t\t<element name="E$23" library="Reference Ruler" package="0402" value="" x="20.574" y="10.16" rot="R90"/>\n'+
+        '\t</elements>\n'+
         '</board>\n'+
         EAGLE_END;
     it("EagleBRD(brd) parses the given Eagle BRD string", function() {
@@ -295,6 +327,27 @@ var DOMParser = require("xmldom").DOMParser;
                 width:"0",
                 layer:"20",
            }],
+        });
+    })
+    it("getElements() returns parsed board elements", function() {
+        var brd = new EagleBRD(xml);
+        should.deepEqual(brd.getElements(), {
+            E$16: {
+                library: "Reference Ruler",
+                name: "E$16",
+                package: "0201",
+                rot: "R90",
+                x: "19.05",
+                y: "10.4648",
+            }, 
+            E$23: {
+                library: "Reference Ruler",
+                name: "E$23",
+                package: "0402",
+                rot: "R90",
+                x: "20.574",
+                y: "10.16",
+            }, 
         });
     })
 })
