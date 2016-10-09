@@ -20,7 +20,47 @@ var DOMParser = require("xmldom").DOMParser;
                 active: layer.getAttribute("active") || "active",
             };
         }
-    }
+    }//parseLayers
+    function parseWires(that, domparent) {
+        var domwires = domparent.getElementsByTagName("wire");
+        var wires = [];
+        for (var iWire = 0; iWire < domwires.length; iWire++) {
+            var domwire = domwires.item(iWire);
+            wires.push({
+                x1: domwire.getAttribute("x1"),
+                y1: domwire.getAttribute("y1"),
+                x2: domwire.getAttribute("x2"),
+                y2: domwire.getAttribute("y2"),
+                width: domwire.getAttribute("width"),
+                layer: domwire.getAttribute("layer"),
+            });
+        }
+        return wires;
+    }//parseWires
+    function parseRectangles(that, domparent) {
+        var domrectangles = domparent.getElementsByTagName("rectangle");
+        var rectangles = [];
+        for (var iRect = 0; iRect < domrectangles.length; iRect++) {
+            var domrectangle = domrectangles.item(iRect);
+            rectangles.push({
+                x1: domrectangle.getAttribute("x1"),
+                y1: domrectangle.getAttribute("y1"),
+                x2: domrectangle.getAttribute("x2"),
+                y2: domrectangle.getAttribute("y2"),
+                layer: domrectangle.getAttribute("layer"),
+            });
+        }
+        return rectangles;
+    }//parseRectangles
+    function parsePlain(that) {
+        var root = that.dom.documentElement;
+        var elts = root.getElementsByTagName("plain");
+        var domplain = elts.length ? elts.item(0) : null;
+        that.$plain = {};
+        domplain && (that.$plain.rectangle = parseRectangles(that, domplain));
+        domplain && (that.$plain.wire = parseWires(that, domplain));
+        return that;
+    }//parsePlain
     function parseLibraries(that) {
         var root = that.dom.documentElement;
         var libraries = root.getElementsByTagName("library");
@@ -51,6 +91,8 @@ var DOMParser = require("xmldom").DOMParser;
                 packages[pkgname] = {
                     name: pkgname,
                     smd: smds,
+                    rectangle: parseRectangles(that, dompackage),
+                    wire: parseWires(that, dompackage),
                 };
             }
             that.$libraries[name] = {
@@ -58,7 +100,8 @@ var DOMParser = require("xmldom").DOMParser;
                 packages: packages,
             };
         }
-    }
+        return that;
+    }// parseLibraries
 
     ////////////////// constructor
     function EagleBRD(brd,options) {
@@ -67,6 +110,7 @@ var DOMParser = require("xmldom").DOMParser;
         options = options || {};
         var parser = new DOMParser();
         that.dom = parser.parseFromString(brd);
+        parsePlain(that);
         parseLayers(that);
         parseLibraries(that);
 
@@ -84,6 +128,10 @@ var DOMParser = require("xmldom").DOMParser;
         var that = this;
         var library = that.getLibrary(libname);
         return library && library.packages && library.packages[pkgname];
+    }
+    EagleBRD.prototype.getPlain = function() {
+        var that = this;
+        return that.$plain;
     }
 
     module.exports = exports.EagleBRD = EagleBRD;
@@ -110,6 +158,10 @@ var DOMParser = require("xmldom").DOMParser;
         '\t<layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>\n' +
         '</layers>\n' +
         '<board>\n'+
+        '\t<plain>\n'+
+        '\t\t<rectangle x1="1.524" y1="17.5768" x2="10.922" y2="17.9832" layer="29"/>\n'+
+        '\t\t<wire x1="0" y1="0" x2="0" y2="25.4" width="0" layer="20"/>\n'+
+        '\t</plain>\n'+
         '\t<libraries>\n'+
         '\t\t<library name="Reference Ruler">\n'+
         '\t\t\t<packages>\n'+
@@ -120,6 +172,9 @@ var DOMParser = require("xmldom").DOMParser;
         '\t\t\t\t<package name="0402">\n'+
         '\t\t\t\t\t<smd name="1" x="-0.5" y="0" dx="0.5" dy="0.6" layer="1"/>\n'+
         '\t\t\t\t\t<smd name="2" x="0.5" y="0" dx="0.5" dy="0.6" layer="1"/>\n'+
+        '\t\t\t\t\t<rectangle x1="-0.1999" y1="-0.3" x2="0.1999" y2="0.3" layer="35"/>\n'+
+        '\t\t\t\t\t<wire x1="-0.1" y1="0.2" x2="0.1" y2="0.2" width="0.15" layer="21"/>\n'+
+        '\t\t\t\t\t<wire x1="-0.1" y1="-0.2" x2="0.1" y2="-0.2" width="0.15" layer="21"/>\n'+
         '\t\t\t\t</package>\n'+
         '\t\t\t</packages>\n'+
         '\t\t</library>\n'+
@@ -160,6 +215,8 @@ var DOMParser = require("xmldom").DOMParser;
         lib.packages.should.properties(["0201", "0402"]);
         should.deepEqual(lib.packages["0201"], {
             name: "0201",
+            rectangle:[],
+            wire:[],
             smd: [{ 
                 name: "P$1",
                 x:"-0.3", 
@@ -181,6 +238,13 @@ var DOMParser = require("xmldom").DOMParser;
         var brd = new EagleBRD(xml);
         should.deepEqual(brd.getPackage("Reference Ruler","0402"), {
             name: "0402",
+            rectangle:[{
+                x1:"-0.1999",
+                y1:"-0.3",
+                x2:"0.1999",
+                y2:"0.3",
+                layer:"35",
+            }],
             smd: [{ 
                 dx:"0.5",
                 dy:"0.6",
@@ -196,6 +260,41 @@ var DOMParser = require("xmldom").DOMParser;
                 x:"0.5", 
                 y:"0", 
             }],
+            wire:[{
+                x1:"-0.1",
+                y1:"0.2",
+                x2:"0.1",
+                y2:"0.2",
+                width:"0.15",
+                layer:"21",
+            },{
+                x1:"-0.1",
+                y1:"-0.2",
+                x2:"0.1",
+                y2:"-0.2",
+                width:"0.15",
+                layer:"21",
+            }],
+        });
+    })
+    it("getPlain() returns parsed board plain element", function() {
+        var brd = new EagleBRD(xml);
+        should.deepEqual(brd.getPlain(), {
+            rectangle: [{
+                layer: "29",
+                x1: "1.524",
+                y1:"17.5768",
+                x2:"10.922",
+                y2:"17.9832",
+            }],
+            wire:[{
+                x1:"0",
+                y1:"0",
+                x2:"0",
+                y2:"25.4",
+                width:"0",
+                layer:"20",
+           }],
         });
     })
 })
