@@ -55,6 +55,15 @@ var DOMParser = require("xmldom").DOMParser;
         var mat2Inv = [ [1,0,0], [-tanAngle,1,0], [0,0,1]];
         that.matInv = that.math.multiply(that.matInv, mat2Inv);
     }
+    Trans2D.prototype.scale = function(w,h) {
+        var that = this;
+        w = w || 1;
+        h = h || 1;
+        var mat2 = [ [w,0,0], [0,h,0], [0,0,1]];
+        that.mat = that.math.multiply(mat2, that.mat);
+        var mat2Inv = [ [1/w,0,0], [0,1/h,0], [0,0,1]];
+        that.matInv = that.math.multiply(that.matInv, mat2Inv);
+    }
     Trans2D.prototype.apply = function(x,y) {
         var that = this;
         var result = that.math.multiply(that.mat,[x,y,1]);
@@ -131,5 +140,11 @@ var DOMParser = require("xmldom").DOMParser;
         assertxy(xfm.apply(1,1), {x:1,y:2}, e);
         assertxy(xfm.apply(2,1), {x:2,y:3}, e);
         assertxy(xfm.applyInverse(2,3), {x:2,y:1}, e);
+    })
+    it("scale(w,h) scales coordinate", function() {
+        var xfm = new Trans2D();
+        xfm.scale(2,3);
+        assertxy(xfm.apply(1,2), {x:2,y:6}, e);
+        assertxy(xfm.applyInverse(2,6), {x:1,y:2}, e);
     })
 })
