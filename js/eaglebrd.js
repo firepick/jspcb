@@ -1,4 +1,5 @@
 var should = require("should");
+var math = require("mathjs");
 var DOMParser = require("xmldom").DOMParser;
 
 (function(exports) {
@@ -41,7 +42,7 @@ var DOMParser = require("xmldom").DOMParser;
     function parseRectangles(that, domparent) {
         var domrectangles = domparent.getElementsByTagName("rectangle");
         var rectangles = [];
-        for (var iRect = 0; iRect < domrectangles.length; iRect++) {
+        for (var iRect = 0; domrectangles && iRect < domrectangles.length; iRect++) {
             var domrectangle = domrectangles.item(iRect);
             rectangles.push({
                 x1: domrectangle.getAttribute("x1"),
@@ -53,6 +54,25 @@ var DOMParser = require("xmldom").DOMParser;
         }
         return rectangles;
     }//parseRectangles
+    function parseTexts(that, domparent) {
+        var domtexts = domparent.getElementsByTagName("text");
+        var texts = [];
+        for (var iRect = 0; iRect < domtexts.length; iRect++) {
+            var domtext = domtexts.item(iRect);
+            var text = domtext.firstChild.nodeValue;
+            texts.push({
+                x: domtext.getAttribute("x"),
+                y: domtext.getAttribute("y"),
+                size: domtext.getAttribute("size"),
+                ratio: domtext.getAttribute("ratio"),
+                rot: domtext.getAttribute("rot"),
+                layer: domtext.getAttribute("layer"),
+                text: text,
+            });
+            //console.log("text.kid",kid);
+        }
+        return texts;
+    }//parseTexts
     function parseElements(that) {
         var root = that.dom.documentElement;
         var domelts = root.getElementsByTagName("element");
@@ -81,6 +101,7 @@ var DOMParser = require("xmldom").DOMParser;
         if (domplain) {
             plain.rectangle = parseRectangles(that, domplain);
             plain.wire = parseWires(that, domplain);
+            plain.text = parseTexts(that, domplain);
         }
         return plain;
     }//parsePlain
@@ -189,6 +210,7 @@ var DOMParser = require("xmldom").DOMParser;
         '\t<plain>\n'+
         '\t\t<rectangle x1="1.524" y1="17.5768" x2="10.922" y2="17.9832" layer="29"/>\n'+
         '\t\t<wire x1="0" y1="0" x2="0" y2="25.4" width="0" layer="20"/>\n'+
+        '\t\t<text x="24.13" y="11.43" size="1.016" layer="21" ratio="10" rot="R90">0201(0603)\n0402(1005)\n0603(1608)\n0805(2012)</text>\n'+
         '\t</plain>\n'+
         '\t<libraries>\n'+
         '\t\t<library name="Reference Ruler">\n'+
@@ -319,6 +341,15 @@ var DOMParser = require("xmldom").DOMParser;
                 x2:"10.922",
                 y2:"17.9832",
             }],
+            text:[{
+                layer:"21",
+                ratio:"10",
+                rot:"R90",
+                size:"1.016",
+                x:"24.13",
+                y:"11.43",
+                text:"0201(0603)\n0402(1005)\n0603(1608)\n0805(2012)",
+            }],
             wire:[{
                 x1:"0",
                 y1:"0",
@@ -349,5 +380,7 @@ var DOMParser = require("xmldom").DOMParser;
                 y: "10.16",
             }, 
         });
+    })
+    it("math", function() {
     })
 })
