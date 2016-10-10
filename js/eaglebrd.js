@@ -182,6 +182,86 @@ var DOMParser = require("xmldom").DOMParser;
         var that = this;
         return that.$elements;
     }
+    EagleBRD.prototype.layerRectangles = function(layer) {
+        var that = this;
+        var rectangles = [];
+        for (var iRect = 0; iRect < that.$plain.rectangle.length; iRect++) {
+            var rectangle = that.$plain.rectangle[iRect];
+            if (rectangle.layer === layer) {
+                rectangles.push({
+                    x1: rectangle.x1,
+                    y1: rectangle.y1,
+                    x2: rectangle.x2,
+                    y2: rectangle.y2,
+                });
+            }
+        }
+        var eltNames = Object.keys(that.$elements);
+        for (var iKey = 0; iKey < eltNames.length; iKey++) {
+            var key = eltNames[iKey];
+            var element = that.$elements[key];
+            var package = element && that.getPackage(element.library, element.package);
+            if (package) {
+                for (var iRect = 0; iRect < package.rectangle.length; iRect++) {
+                    var rectangle = package.rectangle[iRect];
+                    if (rectangle.layer === layer) {
+                        rectangles.push({
+                            x1: rectangle.x1,
+                            y1: rectangle.y1,
+                            x2: rectangle.x2,
+                            y2: rectangle.y2,
+                            rot: element.rot,
+                        });
+                    }
+                }
+            } else {
+                console.log("Element", element.name, " refers to unknown package", element.package, "in library", element.library);
+            }
+        }
+        
+        return rectangles;
+    }
+    EagleBRD.prototype.layerWires = function(layer) {
+        var that = this;
+        var wires = [];
+        for (var iRect = 0; iRect < that.$plain.wire.length; iRect++) {
+            var wire = that.$plain.wire[iRect];
+            if (wire.layer === layer) {
+                wires.push({
+                    x1: wire.x1,
+                    y1: wire.y1,
+                    x2: wire.x2,
+                    y2: wire.y2,
+                    width: wire.width,
+                });
+            }
+        }
+        var eltNames = Object.keys(that.$elements);
+        for (var iKey = 0; iKey < eltNames.length; iKey++) {
+            var key = eltNames[iKey];
+            var element = that.$elements[key];
+            var package = element && that.getPackage(element.library, element.package);
+            if (package) {
+                for (var iRect = 0; iRect < package.wire.length; iRect++) {
+                    var wire = package.wire[iRect];
+                    if (wire.layer === layer) {
+                        wires.push({
+                            x1: wire.x1,
+                            y1: wire.y1,
+                            x2: wire.x2,
+                            y2: wire.y2,
+                            width: wire.width,
+                            rot: element.rot,
+                        });
+                    }
+                }
+            } else {
+                console.log("Element", element.name, " refers to unknown package", element.package, "in library", element.library);
+            }
+        }
+        
+        return wires;
+    }
 
     module.exports = exports.EagleBRD = EagleBRD;
 })(typeof exports === "object" ? exports : (exports = {}));
@@ -381,6 +461,45 @@ var DOMParser = require("xmldom").DOMParser;
             }, 
         });
     })
-    it("math", function() {
+    it("layerRectangles(layer) returns rectangles in layer", function() {
+        var brd = new EagleBRD(xml);
+        should.deepEqual(brd.layerRectangles("29"), [{
+            x1:"1.524",
+            y1:"17.5768",
+            x2:"10.922",
+            y2:"17.9832",
+        }]);
+        should.deepEqual(brd.layerRectangles("35"), [{
+            x1:"-0.1999",
+            y1:"-0.3",
+            x2:"0.1999",
+            y2:"0.3",
+            rot: "R90",
+        }]);
+    })
+    it("layerWires(layer) returns wires in layer", function() {
+        var brd = new EagleBRD(xml);
+        should.deepEqual(brd.layerWires("20"), [{
+            x1: "0",
+            x2: "0",
+            y1: "0",
+            y2: "25.4",
+            width: "0",
+        }]);
+        should.deepEqual(brd.layerWires("21"), [{
+            rot: "R90",
+            x1:"-0.1",
+            y1:"0.2",
+            x2:"0.1",
+            y2:"0.2",
+            width:"0.15",
+        },{
+            rot: "R90",
+            x1:"-0.1",
+            y1:"-0.2",
+            x2:"0.1",
+            y2:"-0.2",
+            width:"0.15",
+        }]);
     })
 })
