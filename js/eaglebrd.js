@@ -1,5 +1,6 @@
 var should = require("should");
 var math = require("mathjs");
+var Trans2D = require("./trans2d");
 var DOMParser = require("xmldom").DOMParser;
 
 (function(exports) {
@@ -182,17 +183,23 @@ var DOMParser = require("xmldom").DOMParser;
         var that = this;
         return that.$elements;
     }
-    EagleBRD.prototype.layerRectangles = function(layer) {
+    EagleBRD.prototype.layerRectangles = function(layer, options) {
         var that = this;
+        opions = options || {};
         var rectangles = [];
         for (var iRect = 0; iRect < that.$plain.rectangle.length; iRect++) {
             var rectangle = that.$plain.rectangle[iRect];
             if (rectangle.layer === layer) {
+                var x1 = Number( rectangle.x1 );
+                var y1 = Number( rectangle.y1 );
+                var x2 = Number( rectangle.x2 );
+                var y2 = Number( rectangle.y2 );
                 rectangles.push({
-                    x1: rectangle.x1,
-                    y1: rectangle.y1,
-                    x2: rectangle.x2,
-                    y2: rectangle.y2,
+                    x: (x1+x2)/2, // centroid
+                    y: (y1+y2)/2, // centroid
+                    w: x2-x1,
+                    h: y2-y1,
+                    angle: 0,
                 });
             }
         }
@@ -200,17 +207,25 @@ var DOMParser = require("xmldom").DOMParser;
         for (var iKey = 0; iKey < eltNames.length; iKey++) {
             var key = eltNames[iKey];
             var element = that.$elements[key];
-            var package = element && that.getPackage(element.library, element.package);
-            if (package) {
-                for (var iRect = 0; iRect < package.rectangle.length; iRect++) {
-                    var rectangle = package.rectangle[iRect];
+            var pkg = element && that.getPackage(element.library, element.package);
+            if (pkg) {
+                var eltx = Number(element.x);
+                var elty = Number(element.y);
+                var erot = element.rot || "R0";
+                var eangle = Number( erot.substring(1) );
+                for (var iRect = 0; iRect < pkg.rectangle.length; iRect++) {
+                    var rectangle = pkg.rectangle[iRect];
                     if (rectangle.layer === layer) {
+                        var x1 = Number( rectangle.x1 );
+                        var y1 = Number( rectangle.y1 );
+                        var x2 = Number( rectangle.x2 );
+                        var y2 = Number( rectangle.y2 );
                         rectangles.push({
-                            x1: rectangle.x1,
-                            y1: rectangle.y1,
-                            x2: rectangle.x2,
-                            y2: rectangle.y2,
-                            rot: element.rot,
+                            x: eltx + (x1+x2)/2, // centroid
+                            y: elty + (y1+y2)/2, // centroid
+                            w: x2-x1,
+                            h: y2-y1,
+                            angle: eangle,
                         });
                     }
                 }
@@ -220,6 +235,66 @@ var DOMParser = require("xmldom").DOMParser;
         }
         
         return rectangles;
+    }
+    EagleBRD.prototype.layerSMDs = function(layer, options) {
+        var that = this;
+        opions = options || {};
+        var smds = [];
+        for (var iRect = 0; iRect < that.$plain.rectangle.length; iRect++) {
+            var rectangle = that.$plain.rectangle[iRect];
+            if (rectangle.layer === layer) {
+                var x1 = Number( rectangle.x1 );
+                var y1 = Number( rectangle.y1 );
+                var x2 = Number( rectangle.x2 );
+                var y2 = Number( rectangle.y2 );
+                smds.push({
+                    x: (x1+x2)/2, // centroid
+                    y: (y1+y2)/2, // centroid
+                    w: x2-x1,
+                    h: y2-y1,
+                    angle: 0,
+                });
+            }
+        }
+        var eltNames = Object.keys(that.$elements);
+        for (var iKey = 0; iKey < eltNames.length; iKey++) {
+            var key = eltNames[iKey];
+            var element = that.$elements[key];
+            var pkg = element && that.getPackage(element.library, element.package);
+            if (pkg) {
+                var eltx = Number(element.x);
+                var elty = Number(element.y);
+                var erot = element.rot || "R0";
+                var eangle = Number( erot.substring(1) );
+                var trans = new Trans2D();
+                trans.rotate(eangle);
+                trans.translate(eltx, elty);
+                for (var iSMD = 0; iSMD < pkg.smd.length; iSMD++) {
+                    var smd = pkg.smd[iSMD];
+                    if (smd.layer === layer) {
+                        var x = Number( smd.x );
+                        var y = Number( smd.y );
+                        var dx = Number( smd.dx );
+                        var dy = Number( smd.dy );
+                        var roundness = Number( smd.roundness ) || 0;
+                        var xy = trans.apply(x, y); // translated and rotated centroid
+                        smds.push({
+                            name: smd.name,
+                            roundness:  roundness,
+                            x: xy.x, 
+                            y: xy.y,
+                            w: dx,
+                            h: dy,
+                            angle: eangle,
+                        });
+                    }
+                }
+            } else {
+                console.log("Element", element.name, " refers to unknown package", element.package, "in library", element.library);
+            }
+        }
+        
+        return smds;
     }
     EagleBRD.prototype.layerWires = function(layer) {
         var that = this;
@@ -315,6 +390,7 @@ var DOMParser = require("xmldom").DOMParser;
         '\t</elements>\n'+
         '</board>\n'+
         EAGLE_END;
+    var e = 0.000000000001;
     it("EagleBRD(brd) parses the given Eagle BRD string", function() {
         var brd = new EagleBRD(xml);
         var root = brd.dom.documentElement;
@@ -463,19 +539,52 @@ var DOMParser = require("xmldom").DOMParser;
     })
     it("layerRectangles(layer) returns rectangles in layer", function() {
         var brd = new EagleBRD(xml);
-        should.deepEqual(brd.layerRectangles("29"), [{
-            x1:"1.524",
-            y1:"17.5768",
-            x2:"10.922",
-            y2:"17.9832",
-        }]);
-        should.deepEqual(brd.layerRectangles("35"), [{
-            x1:"-0.1999",
-            y1:"-0.3",
-            x2:"0.1999",
-            y2:"0.3",
-            rot: "R90",
-        }]);
+        var r29 = brd.layerRectangles("29");
+        r29.length.should.equal(1);
+        r29[0].w.should.approximately(9.398, e);
+        r29[0].h.should.approximately(0.4064, e);
+        r29[0].x.should.approximately(6.223, e);
+        r29[0].y.should.approximately(17.78, e);
+        r29[0].angle.should.equal(0);
+        var r35 = brd.layerRectangles("35");
+        r35[0].w.should.approximately(0.3998, e);
+        r35[0].h.should.approximately(0.6, e);
+        r35[0].x.should.approximately(20.574, e);
+        r35[0].y.should.approximately(10.16, e);
+        r35[0].angle.should.equal(90);
+    })
+    it("layerSMDs(layer) returns SMD pads in layer", function() {
+        var brd = new EagleBRD(xml);
+        var r1 = brd.layerSMDs("1");
+        r1.length.should.equal(4);
+        r1[0].name.should.equal("P$1");
+        r1[0].roundness.should.equal(0);
+        r1[0].w.should.approximately(0.3, e);
+        r1[0].h.should.approximately(0.3, e);
+        r1[0].x.should.approximately(19.05, e);
+        r1[0].y.should.approximately(10.7648, e);
+        r1[0].angle.should.equal(90);
+        r1[1].name.should.equal("P$2");
+        r1[1].roundness.should.equal(0);
+        r1[1].w.should.approximately(0.3, e);
+        r1[1].h.should.approximately(0.3, e);
+        r1[1].x.should.approximately(19.05, e);
+        r1[1].y.should.approximately(10.1648, e);
+        r1[1].angle.should.equal(90);
+        r1[2].name.should.equal("1");
+        r1[2].roundness.should.equal(0);
+        r1[2].w.should.approximately(0.5, e);
+        r1[2].h.should.approximately(0.6, e);
+        r1[2].x.should.approximately(20.574, e);
+        r1[2].y.should.approximately(10.66, e);
+        r1[2].angle.should.equal(90);
+        r1[3].name.should.equal("2");
+        r1[3].roundness.should.equal(0);
+        r1[3].w.should.approximately(0.5, e);
+        r1[3].h.should.approximately(0.6, e);
+        r1[3].x.should.approximately(20.574, e);
+        r1[3].y.should.approximately(9.66, e);
+        r1[3].angle.should.equal(90);
     })
     it("layerWires(layer) returns wires in layer", function() {
         var brd = new EagleBRD(xml);
