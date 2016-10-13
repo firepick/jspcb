@@ -1,15 +1,53 @@
 {
-  "name": "firestep-cam",
-  "description": "Nodejs REST service for FireStep with camera(s)",
+  "name": "jspcb",
+  "description": "Javascript library for parsing printed circuit board (PCB) files (e.g., Eagle *.brd)",
   "version": "0.0.1",
+  "author": {
+    "name": "Karl Lew",
+    "email": "karl@firepick.org",
+    "url": "http://www.firepick.org"
+  },
+  "homepage": "https://github.com/firepick/jspcb",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/firepick/jspcb.git"
+  },
   "private": true,
   "dependencies": {
     "body-parser":"1.14.1",
     "express": "4.13.3"
   },
+  "files": [
+    "lib/*.js",
+    "main.js"
+  ],
+  "keywords": [
+    "pcb",
+    "Eagle",
+    "brd",
+    "parser",
+    "javascript",
+    "FirePaste",
+    "FirePick"
+  ],
   "scripts": {
     "test": "grunt test"
   },
+  "main": "./main.js",
+  "maintainers": [ {
+        "name": "Karl Lew",
+        "email": "karl@firepick.org"
+   }],
+  "contributors": [ {
+        "name": "Karl Lew",
+        "email": "karl@firepick.org"
+   }],
+  "bugs": {
+    "url": "http://github.com/firepick/jspcb/issues",
+    "email": "karl@firepick.org"
+  },
+  "license": "MIT",
+  "dependencies": {},
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
@@ -20,11 +58,15 @@
     "grunt-mocha-test": "~0.12.7",
     "grunt-npm-install": "^0.2.0",
     "grunt-simple-mocha": "0.4.0",
-    "tinyg": "0.3.27",
     "mathjs": "3.5.3",
     "mocha": "2.1.0",
     "should": "5.0.1",
-    "xmldom": "0.1.22",
-    "temp": "0.8.1"
+    "xmldom": "0.1.22"
+  },
+  "bin": {
+    "jspcb": "./bin/cli.js"
+  },
+  "directories": {
+    "lib": "lib"
   }
 }
