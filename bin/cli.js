@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+console.log("hello");
 
 /**
  * jspcb
@@ -60,5 +61,5 @@ if (version) {
   outputVersion();
 } else if (help) {
   outputHelp();
-} else if (scripts.length === 0) {
+} else {
 }
