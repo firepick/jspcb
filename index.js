@@ -5,4 +5,3 @@ if (typeof require === 'function') {
     exports.EagleBRD = EagleBRD;
     exports.Trans2D = Trans2D;
 }
-
