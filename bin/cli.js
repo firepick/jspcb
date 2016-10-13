@@ -72,13 +72,26 @@ var EagleBRD = require("./../lib/eaglebrd");
                     }
                 }
                 if (options.output.toUpperCase() === "SVG") {
+                    var width = brd.bounds.r - brd.bounds.l;
+                    var height = brd.bounds.b - brd.bounds.t;
                     console.log('<svg xmlns="http://www.w3.org/2000/svg" version="1.1"',
-                        'width="194mm" height="228mm" viewbox="0 -114 194 228" >');
+                        'width="'+width+'mm" height="'+height+'mm"',
+                        'viewbox="',
+                        brd.bounds.l, -brd.bounds.b, brd.bounds.r-brd.bounds.l, brd.bounds.b-brd.bounds.t,
+                        '" >');
                     console.log('<g stroke-linecap="round" font-size="2" font-family="Verdana"',
                         '\tstroke-width="0.25"',
-                        '\tfill="green"',
                         '\ttransform="scale(1,-1)"',
                         '>');
+                    console.log('<rect',
+                        'x="'+brd.bounds.l+'"',
+                        'y="'+brd.bounds.t+'"',
+                        'width="'+width+'"',
+                        'height="'+height+'"',
+                        'fill="#ddf"',
+                        '/>');
+                        
+                    console.log('<g fill="#f80"><!--smd-->');
                     for (var iSMD = 0; iSMD < smds.length; iSMD++) {
                         var smd = smds[iSMD];
                         var transform = smd.angle ? 
@@ -92,6 +105,7 @@ var EagleBRD = require("./../lib/eaglebrd");
                             '/>'
                             );
                     }
+                    console.log('</g><!--smd-->');
                     console.log('</g>');
                     console.log('</svg>');
                 }
