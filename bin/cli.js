@@ -49,6 +49,69 @@ var EagleBRD = require("./../lib/eaglebrd");
             process.exit(0);
         }
 
+        function processEagleSVG(brd, smds, holes, options) {
+            var width = brd.bounds.r - brd.bounds.l;
+            var height = brd.bounds.b - brd.bounds.t;
+            console.log('<svg xmlns="http://www.w3.org/2000/svg" version="1.1"',
+                'width="'+width+'mm" height="'+height+'mm"',
+                'viewbox="',
+                brd.bounds.l, -brd.bounds.b, brd.bounds.r-brd.bounds.l, brd.bounds.b-brd.bounds.t,
+                '" >');
+            console.log('<g stroke-linecap="round" font-size="2" font-family="Verdana"',
+                '\tstroke-width="0.25"',
+                '\ttransform="scale(1,-1)"',
+                '>');
+            var dimWires = brd.layerWires("Dimension");
+            console.log('<rect',
+                'x="'+brd.bounds.l+'"',
+                'y="'+brd.bounds.t+'"',
+                'width="'+width+'"',
+                'height="'+height+'"',
+                'fill="#eef"',
+                '/><!--dimension-->');
+            for (var iWire = 0; iWire < dimWires.length; iWire++) {
+                var wire = dimWires[iWire];
+                console.log("<line",
+                    'x1="'+wire.x1+'"',
+                    'y1="'+wire.y1+'"',
+                    'x2="'+wire.x2+'"',
+                    'y2="'+wire.y2+'"',
+                    'width="0.5"',
+                    'stroke="#f0f"',
+                    '/><!--dimension-->');
+            }
+                
+            console.log('<g fill="#f80"><!--smd-->');
+            for (var iSMD = 0; iSMD < smds.length; iSMD++) {
+                var smd = smds[iSMD];
+                var transform = smd.angle ? 
+                    '"rotate('+smd.angle+','+smd.x+','+smd.y+')"' : '""';
+                console.log('<rect',
+                    'x="'+(smd.x-smd.w/2)+'"',
+                    'y="'+(smd.y-smd.h/2)+'"',
+                    'width="'+smd.w+'"',
+                    'height="'+smd.h+'"',
+                    'transform='+transform,
+                    '/>',
+                    '<!--'+smd.element+'-->'
+                    );
+            }
+            console.log('</g><!--smd-->');
+            console.log('<g fill="#000"><!--hole-->');
+            for (var iHole = 0; iHole < holes.length; iHole++) {
+                var hole = holes[iHole];
+                console.log('<circle',
+                    'cx="'+hole.x+'"',
+                    'cy="'+hole.y+'"',
+                    'r="'+(hole.drill/2)+'"',
+                    '/>',
+                    '<!--'+hole.element+'-->'
+                    );
+            }
+            console.log('</g><!--hole-->');
+            console.log('</g>');
+            console.log('</svg>');
+        }
         function processEagleBRD(options) {
             fs.readFile(options.path, function(err, data) {
                 if (err) {
@@ -76,55 +139,7 @@ var EagleBRD = require("./../lib/eaglebrd");
                     }
                 }
                 if (options.output.toUpperCase() === "SVG") {
-                    var width = brd.bounds.r - brd.bounds.l;
-                    var height = brd.bounds.b - brd.bounds.t;
-                    console.log('<svg xmlns="http://www.w3.org/2000/svg" version="1.1"',
-                        'width="'+width+'mm" height="'+height+'mm"',
-                        'viewbox="',
-                        brd.bounds.l, -brd.bounds.b, brd.bounds.r-brd.bounds.l, brd.bounds.b-brd.bounds.t,
-                        '" >');
-                    console.log('<g stroke-linecap="round" font-size="2" font-family="Verdana"',
-                        '\tstroke-width="0.25"',
-                        '\ttransform="scale(1,-1)"',
-                        '>');
-                    console.log('<rect',
-                        'x="'+brd.bounds.l+'"',
-                        'y="'+brd.bounds.t+'"',
-                        'width="'+width+'"',
-                        'height="'+height+'"',
-                        'fill="#ddf"',
-                        '/>');
-                        
-                    console.log('<g fill="#f80"><!--smd-->');
-                    for (var iSMD = 0; iSMD < smds.length; iSMD++) {
-                        var smd = smds[iSMD];
-                        var transform = smd.angle ? 
-                            '"rotate('+smd.angle+','+smd.x+','+smd.y+')"' : '""';
-                        console.log('<rect',
-                            'x="'+(smd.x-smd.w/2)+'"',
-                            'y="'+(smd.y-smd.h/2)+'"',
-                            'width="'+smd.w+'"',
-                            'height="'+smd.h+'"',
-                            'transform='+transform,
-                            '/>',
-                            '<!--'+smd.element+'-->'
-                            );
-                    }
-                    console.log('</g><!--smd-->');
-                    console.log('<g fill="#000"><!--hole-->');
-                    for (var iHole = 0; iHole < holes.length; iHole++) {
-                        var hole = holes[iHole];
-                        console.log('<circle',
-                            'cx="'+hole.x+'"',
-                            'cy="'+hole.y+'"',
-                            'r="'+(hole.drill/2)+'"',
-                            '/>',
-                            '<!--'+hole.element+'-->'
-                            );
-                    }
-                    console.log('</g><!--hole-->');
-                    console.log('</g>');
-                    console.log('</svg>');
+                    processEagleSVG(brd, smds, holes, options);
                 }
             });
         }
