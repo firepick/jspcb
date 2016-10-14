@@ -1,14 +1,19 @@
 # jspcb
 Javascript library for parsing PCB file formats having rich metadata. 
 Compatible with nodejs, jspcb can be used on the server or in the browser 
-client in the context of automated pick-and-place (PnP).
+client in the context of automated pick-and-place (PnP). Supported PCB file
+formats:
+
+* <a href="file:///home/chronos/u-a7a1ed9f0b86bfc3924e4a621e22cffc1868821a/Downloads/eagle416r2_help_en.pdf">Eagle BRD (XML)</a>
 
 ### Install
-Clone this repository and install the command line wrapper:
+To install **jspcb** command line wrapper and dependencies:
 
-`git clone https://github.com/firepick/jspcb.git`
-`cd jspcb`
-`npm install -g`
+`npm install -g jspcb`
+
+NOTE: You may need to do this:
+
+`sudo npm install -g jspcb`
 
 ### Command line
 #### Generate SVG file from Eagle BRD
@@ -23,4 +28,8 @@ into its
     <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler.png" height="200px"></a>
 
 #### Generate CSV file with SMD pads
+To generate a CSV file of the SMD pads in layer 16:
+
 `jspcb --eagle eagle/ruler.brd -o csv --layer 16`
+
+
