@@ -58,14 +58,18 @@ var EagleBRD = require("./../lib/eaglebrd");
                 var xml = data.toString();
                 var brd = new EagleBRD(xml);
                 var smds = [];
+                var holes = brd.holes();
                 if (options.show.toUpperCase() === "SMD") {
                     smds = brd.layerSMDs(options.layer);
                 }
                 if (options.output.toUpperCase() === "CSV") {
-                    console.log("#,ELEMENT,PAD,X,Y,W,H,ANGLE,ROUNDNESS");
+                    console.log("#,ELEMENT,PACKAGE,PAD,X,Y,W,H,ANGLE,ROUNDNESS");
                     for (var iSMD = 0; iSMD < smds.length; iSMD++) {
                         var smd = smds[iSMD];
-                        console.log( iSMD+1+","+smd.element+","+smd.name+", "+
+                        console.log( iSMD+1+","+
+                            smd.element+","+
+                            smd.package+","+
+                            smd.name+", "+
                             smd.x+","+smd.y+","+
                             smd.w+","+smd.h+","+
                             smd.angle+","+smd.roundness);
@@ -102,10 +106,23 @@ var EagleBRD = require("./../lib/eaglebrd");
                             'width="'+smd.w+'"',
                             'height="'+smd.h+'"',
                             'transform='+transform,
-                            '/>'
+                            '/>',
+                            '<!--'+smd.element+'-->'
                             );
                     }
                     console.log('</g><!--smd-->');
+                    console.log('<g fill="#000"><!--hole-->');
+                    for (var iHole = 0; iHole < holes.length; iHole++) {
+                        var hole = holes[iHole];
+                        console.log('<circle',
+                            'cx="'+hole.x+'"',
+                            'cy="'+hole.y+'"',
+                            'r="'+(hole.drill/2)+'"',
+                            '/>',
+                            '<!--'+hole.element+'-->'
+                            );
+                    }
+                    console.log('</g><!--hole-->');
                     console.log('</g>');
                     console.log('</svg>');
                 }
