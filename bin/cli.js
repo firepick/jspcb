@@ -52,36 +52,72 @@ var EagleBRD = require("./../lib/eaglebrd");
         function processEagleSVG(brd, smds, holes, options) {
             var width = brd.bounds.r - brd.bounds.l;
             var height = brd.bounds.b - brd.bounds.t;
+            var layerNumber = brd.getLayerNumber(options.layer);
+            var layerPad = brd.isBottomLayer(layerNumber) ? "16" : "1";
+            var layerSilk = brd.isBottomLayer(layerNumber) ? "22" : "21";
             console.log('<svg xmlns="http://www.w3.org/2000/svg" version="1.1"',
                 'width="'+width+'mm" height="'+height+'mm"',
                 'viewbox="',
                 brd.bounds.l, -brd.bounds.b, brd.bounds.r-brd.bounds.l, brd.bounds.b-brd.bounds.t,
                 '" >');
-            console.log('<g stroke-linecap="round" font-size="2" font-family="Verdana"',
-                '\tstroke-width="0.25"',
-                '\ttransform="scale(1,-1)"',
+            console.log('<g stroke-linecap="round" stroke-width="0.25"',
+                //'\ttransform="scale(1,-1)"',
                 '>');
+
             var dimWires = brd.pcbWires("Dimension");
             console.log('<rect',
                 'x="'+brd.bounds.l+'"',
-                'y="'+brd.bounds.t+'"',
+                'y="'+(-brd.bounds.t)+'"',
                 'width="'+width+'"',
                 'height="'+height+'"',
-                'fill="#eef"',
+                'fill="#ddf"',
                 '/><!--dimension-->');
             for (var iWire = 0; iWire < dimWires.length; iWire++) {
                 var wire = dimWires[iWire];
                 console.log("<line",
                     'x1="'+wire.x1+'"',
-                    'y1="'+wire.y1+'"',
+                    'y1="'+(-wire.y1)+'"',
                     'x2="'+wire.x2+'"',
-                    'y2="'+wire.y2+'"',
+                    'y2="'+(-wire.y2)+'"',
                     'width="0.5"',
                     'stroke="#f0f"',
                     '/><!--dimension-->');
             }
                 
-            console.log('<g fill="#f80"><!--smd-->');
+            console.log('<g fill="#888" font-family="Courier New"><!--text-->');
+            var texts = brd.pcbText(layerSilk);
+            for (var iText = 0; iText < texts.length; iText++ ) {
+                var text = texts[iText];
+                var transform = "";
+                if (text.angle) {
+                    transform = 'transform="rotate('+(-text.angle)+','+text.x+','+(-text.y)+')"';
+                }
+                var tspans = text.text.replace(/ /g, "&nbsp;").split("\n");
+                var lineH = text.size * 1.45;
+                if (tspans.length > 1) {
+                    var top = -text.y-(tspans.length-1)*lineH;
+                    for (var iSpan = 0; iSpan < tspans.length; iSpan++) {
+                        tspans[iSpan] = '<tspan'+
+                            ' x="'+text.x+'"'+
+                            ' y="'+(top+iSpan*lineH)+'"'+
+                            '>' + 
+                            tspans[iSpan] + 
+                            '</tspan>\n';
+                    }
+                    tspans = "\n" + tspans.join("");
+                } else {
+                    tspans = tspans.join("");
+                }
+                console.log('<text',
+                    'x="'+text.x+'"',
+                    'y="'+(-text.y)+'"',
+                    transform,
+                    'font-size="' + lineH + '"',
+                    '>'+tspans+'</text>');
+            }
+            console.log('</g><!--text-->');
+
+            console.log('<g fill="#f80" transform="scale(1,-1)" ><!--smd-->');
             for (var iSMD = 0; iSMD < smds.length; iSMD++) {
                 var smd = smds[iSMD];
                 var transform = smd.angle ? 
@@ -97,12 +133,13 @@ var EagleBRD = require("./../lib/eaglebrd");
                     );
             }
             console.log('</g><!--smd-->');
+
             console.log('<g fill="#000"><!--hole-->');
             for (var iHole = 0; iHole < holes.length; iHole++) {
                 var hole = holes[iHole];
                 console.log('<circle',
                     'cx="'+hole.x+'"',
-                    'cy="'+hole.y+'"',
+                    'cy="'+(-hole.y)+'"',
                     'r="'+(hole.drill/2)+'"',
                     '/>',
                     '<!--'+hole.element+'-->'
