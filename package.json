@@ -1,7 +1,7 @@
 {
   "name": "jspcb",
   "description": "Javascript library for parsing printed circuit board (PCB) files (e.g., Eagle *.brd)",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Karl Lew",
     "email": "karl@firepick.org",
@@ -12,7 +12,10 @@
     "type": "git",
     "url": "git://github.com/firepick/jspcb.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "mathjs": "3.5.3",
+    "xmldom": "0.1.22"
+  },
   "files": [
     "lib/*",
     "bin/*",
@@ -55,10 +58,8 @@
     "grunt-mocha-test": "~0.12.7",
     "grunt-npm-install": "^0.2.0",
     "grunt-simple-mocha": "0.4.0",
-    "mathjs": "3.5.3",
     "mocha": "2.1.0",
-    "should": "5.0.1",
-    "xmldom": "0.1.22"
+    "should": "5.0.1"
   },
   "bin": {
     "jspcb": "./bin/cli.js"

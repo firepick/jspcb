@@ -4,14 +4,15 @@ Compatible with nodejs, jspcb can be used on the server or in the browser
 client in the context of automated pick-and-place (PnP).
 
 ### Install
-`npm install jspcb`
+Clone this repository and install the command line wrapper:
 
-### Command line
-You can install the **jspcb** command line wrapper to perform common tasks:
-
+`git clone https://github.com/firepick/jspcb.git`
+`cd jspcb`
 `npm install -g`
 
-For example, with **jspcb** you convert XML Eagle BRD file such as the 
+### Command line
+#### Generate SVG file from Eagle BRD
+Convert XML Eagle BRD file such as the 
 <a href="https://github.com/adafruit/Adafruit-PCB-Ruler/blob/master/Adafruit%20PCB%20Reference%20Ruler.brd">AdaFruit PCB ruler</a>
 into its 
 <a href="https://raw.githubusercontent.com/firepick/jspcb/master/eagle/ruler.svg">SVG equivalent</a>
@@ -21,3 +22,5 @@ into its
 <a href="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler.png">
     <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler.png" height="200px"></a>
 
+#### Generate CSV file with SMD pads
+`jspcb --eagle eagle/ruler.brd -o csv --layer 16`
