@@ -12,10 +12,6 @@
     "type": "git",
     "url": "git://github.com/firepick/jspcb.git"
   },
-  "dependencies": {
-    "mathjs": "3.5.3",
-    "xmldom": "0.1.22"
-  },
   "files": [
     "lib/*",
     "bin/*",
@@ -47,7 +43,10 @@
     "email": "karl@firepick.org"
   },
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "mathjs": "3.5.3",
+    "xmldom": "0.1.22"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
