@@ -61,7 +61,7 @@ var EagleBRD = require("./../lib/eaglebrd");
                 '\tstroke-width="0.25"',
                 '\ttransform="scale(1,-1)"',
                 '>');
-            var dimWires = brd.layerWires("Dimension");
+            var dimWires = brd.pcbWires("Dimension");
             console.log('<rect',
                 'x="'+brd.bounds.l+'"',
                 'y="'+brd.bounds.t+'"',
@@ -121,9 +121,9 @@ var EagleBRD = require("./../lib/eaglebrd");
                 var xml = data.toString();
                 var brd = new EagleBRD(xml);
                 var smds = [];
-                var holes = brd.holes();
+                var holes = brd.pcbHoles();
                 if (options.show.toUpperCase() === "SMD") {
-                    smds = brd.layerSMDs(options.layer);
+                    smds = brd.pcbPads(options.layer);
                 }
                 if (options.output.toUpperCase() === "CSV") {
                     console.log("#,ELEMENT,PACKAGE,PAD,X,Y,W,H,ANGLE,ROUNDNESS");
