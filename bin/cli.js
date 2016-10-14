@@ -55,6 +55,7 @@ var EagleBRD = require("./../lib/eaglebrd");
             var layerNumber = brd.getLayerNumber(options.layer);
             var layerPad = brd.isBottomLayer(layerNumber) ? "16" : "1";
             var layerSilk = brd.isBottomLayer(layerNumber) ? "22" : "21";
+            console.log('<?xml version="1.0" encoding="UTF-8" standalone="no" ?>');
             console.log('<svg xmlns="http://www.w3.org/2000/svg" version="1.1"',
                 'width="'+width+'mm" height="'+height+'mm"',
                 'viewbox="',
@@ -92,7 +93,7 @@ var EagleBRD = require("./../lib/eaglebrd");
                 if (text.angle) {
                     transform = 'transform="rotate('+(-text.angle)+','+text.x+','+(-text.y)+')"';
                 }
-                var tspans = text.text.replace(/ /g, "&nbsp;").split("\n");
+                var tspans = text.text.replace(/ /g, "\u00a0").split("\n");
                 var lineH = text.size * 1.45;
                 if (tspans.length > 1) {
                     var top = -text.y-(tspans.length-1)*lineH;
