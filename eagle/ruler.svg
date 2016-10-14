@@ -1,11 +1,132 @@
 <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="154.94mm" height="25.4mm" viewbox=" 0 -25.4 154.94 25.4 " >
-<g stroke-linecap="round" font-size="2" font-family="Verdana" 	stroke-width="0.25" 	transform="scale(1,-1)" >
-<rect x="0" y="0" width="154.94" height="25.4" fill="#eef" /><!--dimension-->
-<line x1="0" y1="0" x2="0" y2="25.4" width="0.5" stroke="#f0f" /><!--dimension-->
-<line x1="0" y1="25.4" x2="154.94" y2="25.4" width="0.5" stroke="#f0f" /><!--dimension-->
-<line x1="154.94" y1="25.4" x2="154.94" y2="0" width="0.5" stroke="#f0f" /><!--dimension-->
+<g stroke-linecap="round" stroke-width="0.25" >
+<rect x="0" y="0" width="154.94" height="25.4" fill="#ddf" /><!--dimension-->
+<line x1="0" y1="0" x2="0" y2="-25.4" width="0.5" stroke="#f0f" /><!--dimension-->
+<line x1="0" y1="-25.4" x2="154.94" y2="-25.4" width="0.5" stroke="#f0f" /><!--dimension-->
+<line x1="154.94" y1="-25.4" x2="154.94" y2="0" width="0.5" stroke="#f0f" /><!--dimension-->
 <line x1="154.94" y1="0" x2="0" y2="0" width="0.5" stroke="#f0f" /><!--dimension-->
-<g fill="#f80"><!--smd-->
+<g fill="#888" font-family="Courier New"><!--text-->
+<text x="2" y="-2"  font-size="2.9" >0</text>
+<text x="12" y="-2"  font-size="2.9" >1</text>
+<text x="22" y="-2"  font-size="2.9" >2</text>
+<text x="32" y="-2"  font-size="2.9" >3</text>
+<text x="42" y="-2"  font-size="2.9" >4</text>
+<text x="52" y="-2"  font-size="2.9" >5</text>
+<text x="62" y="-2"  font-size="2.9" >6</text>
+<text x="72" y="-2"  font-size="2.9" >7</text>
+<text x="82" y="-1.492"  font-size="2.9" >8</text>
+<text x="92" y="-2"  font-size="2.9" >9</text>
+<text x="102" y="-2"  font-size="2.9" >10</text>
+<text x="112" y="-2"  font-size="2.9" >11</text>
+<text x="122" y="-2"  font-size="2.9" >12</text>
+<text x="132" y="-2"  font-size="2.9" >13</text>
+<text x="142" y="-2"  font-size="2.9" >14</text>
+<text x="1.9365" y="-21.177"  font-size="2.9" >0</text>
+<text x="27.305" y="-21.082"  font-size="2.9" >1</text>
+<text x="52.705" y="-21.082"  font-size="2.9" >2</text>
+<text x="78.105" y="-21.59"  font-size="2.9" >3</text>
+<text x="103.505" y="-21.336"  font-size="2.9" >4</text>
+<text x="128.905" y="-21.336"  font-size="2.9" >5</text>
+<text x="11.938" y="-17.272"  font-size="1.4732" >6</text>
+<text x="11.938" y="-15.748"  font-size="1.4732" >8</text>
+<text x="11.938" y="-14.224"  font-size="1.4732" >10</text>
+<text x="11.938" y="-12.7"  font-size="1.4732" >12</text>
+<text x="11.938" y="-11.176"  font-size="1.4732" >18</text>
+<text x="11.938" y="-6.604"  font-size="1.4732" >40</text>
+<text x="11.938" y="-8.128"  font-size="1.4732" >30</text>
+<text x="11.938" y="-9.652"  font-size="1.4732" >24</text>
+<text x="1.524" y="-18.542"  font-size="1.4732" >Trace&nbsp;Width&nbsp;(mil)</text>
+<text x="17.78" y="-6.604" transform="rotate(-90,17.78,-6.604)" font-size="1.4732" >Imperial&nbsp;(Metric)</text>
+<text x="24.13" y="-11.43" transform="rotate(-90,24.13,-11.43)" font-size="1.4732" >
+<tspan x="24.13" y="-15.849599999999999">0201(0603)</tspan>
+<tspan x="24.13" y="-14.376399999999999">0402(1005)</tspan>
+<tspan x="24.13" y="-12.903199999999998">0603(1608)</tspan>
+<tspan x="24.13" y="-11.43">0805(2012)</tspan>
+</text>
+<text x="25.908" y="-11.43" transform="rotate(-90,25.908,-11.43)" font-size="1.4732" >1206(3216)</text>
+<text x="28.6004" y="-11.43" transform="rotate(-90,28.6004,-11.43)" font-size="1.4732" >1210(3225)</text>
+<text x="31.9024" y="-11.43" transform="rotate(-90,31.9024,-11.43)" font-size="1.4732" >2010(5025)</text>
+<text x="73.152" y="-11.176"  font-size="1.4732" >DPAK</text>
+<text x="82.8548" y="-10.033"  font-size="1.4732" >D2PAK</text>
+<text x="64.897" y="-9.144"  font-size="1.4732" >SOT223</text>
+<text x="65.3542" y="-20.828"  font-size="1.4732" >SOT89</text>
+<text x="60.452" y="-6.35" transform="rotate(-90,60.452,-6.35)" font-size="1.4732" >SC70</text>
+<text x="92.71" y="-20.574"  font-size="1.8415" >XTAL/OSC</text>
+<text x="92.71" y="-12.446"  font-size="1.4732" >5X3.2</text>
+<text x="103.7844" y="-15.24" transform="rotate(-180,103.7844,-15.24)" font-size="1.4732" >3.2X2.4</text>
+<text x="103.632" y="-15.748"  font-size="1.4732" >2.5X2</text>
+<text x="98.552" y="-7.366"  font-size="1.4732" >HC49</text>
+<text x="104.902" y="-13.208" transform="rotate(-180,104.902,-13.208)" font-size="1.4732" >2X1.2</text>
+<text x="35.052" y="-7.5692" transform="rotate(-90,35.052,-7.5692)" font-size="1.4732" >SC79</text>
+<text x="38.354" y="-9.2964" transform="rotate(-90,38.354,-9.2964)" font-size="1.4732" >SOD323</text>
+<text x="36.576" y="-8.2804" transform="rotate(-90,36.576,-8.2804)" font-size="1.4732" >MicroMELF</text>
+<text x="39.751" y="-10.922" transform="rotate(-90,39.751,-10.922)" font-size="1.4732" >SOD80</text>
+<text x="43.18" y="-11.684" transform="rotate(-90,43.18,-11.684)" font-size="1.4732" >SOD128</text>
+<text x="44.577" y="-11.43"  font-size="1.4732" >SMA</text>
+<text x="48.4886" y="-12.7"  font-size="1.4732" >SMB</text>
+<text x="56.896" y="-12.1666" transform="rotate(-180,56.896,-12.1666)" font-size="1.4732" >SMC</text>
+<text x="151.8666" y="-19.812"  font-size="1.4732" >8</text>
+<text x="147.9804" y="-19.812"  font-size="1.4732" >9</text>
+<text x="143.9418" y="-19.812"  font-size="1.4732" >10</text>
+<text x="140.716" y="-19.812"  font-size="1.4732" >11</text>
+<text x="137.7442" y="-19.812"  font-size="1.4732" >12</text>
+<text x="135.001" y="-19.812"  font-size="1.4732" >13</text>
+<text x="132.461" y="-19.812"  font-size="1.4732" >14</text>
+<text x="130.1242" y="-19.812"  font-size="1.4732" >15</text>
+<text x="127.9652" y="-19.812"  font-size="1.4732" >16</text>
+<text x="109.728" y="-19.812" transform="rotate(-90,109.728,-19.812)" font-size="1.4732" >28</text>
+<text x="111.252" y="-19.812" transform="rotate(-90,111.252,-19.812)" font-size="1.4732" >27</text>
+<text x="112.776" y="-19.812" transform="rotate(-90,112.776,-19.812)" font-size="1.4732" >26</text>
+<text x="114.3" y="-19.812" transform="rotate(-90,114.3,-19.812)" font-size="1.4732" >25</text>
+<text x="115.824" y="-19.812" transform="rotate(-90,115.824,-19.812)" font-size="1.4732" >24</text>
+<text x="117.348" y="-19.812" transform="rotate(-90,117.348,-19.812)" font-size="1.4732" >23</text>
+<text x="118.872" y="-19.812" transform="rotate(-90,118.872,-19.812)" font-size="1.4732" >22</text>
+<text x="120.396" y="-19.812" transform="rotate(-90,120.396,-19.812)" font-size="1.4732" >21</text>
+<text x="121.9708" y="-19.812" transform="rotate(-90,121.9708,-19.812)" font-size="1.4732" >20</text>
+<text x="123.5456" y="-19.812" transform="rotate(-90,123.5456,-19.812)" font-size="1.4732" >19</text>
+<text x="125.3998" y="-19.812" transform="rotate(-90,125.3998,-19.812)" font-size="1.4732" >18</text>
+<text x="127.254" y="-19.812" transform="rotate(-90,127.254,-19.812)" font-size="1.4732" >17</text>
+<text x="132.6896" y="-21.336"  font-size="2.2098" >AWG</text>
+<text x="58.928" y="-15.875"  font-size="1.4732" >SOT23</text>
+<text x="33.528" y="-17.272"  font-size="2.2098" >
+<tspan x="33.528" y="-19.4818">Common&nbsp;Diodes</tspan>
+<tspan x="33.528" y="-17.272">and&nbsp;&nbsp;&nbsp;&nbsp;Transistors</tspan>
+</text>
+<text x="149.606" y="-4.572" transform="rotate(-90,149.606,-4.572)" font-size="1.4732" >Font&nbsp;Size</text>
+<text x="150.114" y="-4.699"  font-size="1.4732" >40mil</text>
+<text x="150.114" y="-6.2484"  font-size="1.8415" >50</text>
+<text x="150.114" y="-8.0264"  font-size="2.2098" >60</text>
+<text x="150.114" y="-10.0584"  font-size="2.9464" >80</text>
+<text x="113.284" y="-6.096" transform="rotate(-90,113.284,-6.096)" font-size="1.4732" >SSOP</text>
+<text x="121.666" y="-5.08" transform="rotate(-90,121.666,-5.08)" font-size="1.4732" >SOIC</text>
+<text x="121.666" y="-12.7" transform="rotate(-90,121.666,-12.7)" font-size="1.4732" >QFP</text>
+<text x="109.982" y="-13.462" transform="rotate(-90,109.982,-13.462)" font-size="1.4732" >QFN</text>
+<text x="16.256" y="-6.604" transform="rotate(-90,16.256,-6.604)" font-size="2.2098" >SMD&nbsp;R/C/L</text>
+<text x="41.0718" y="-10.922" transform="rotate(-90,41.0718,-10.922)" font-size="1.4732" >MiniMELF</text>
+<text x="151.7688375" y="-2.287021875"  font-size="2.2098" >15</text>
+<text x="153.289" y="-23.368" transform="rotate(-180,153.289,-23.368)" font-size="2.9" >6</text>
+<text x="5.588" y="-24.892" transform="rotate(-270,5.588,-24.892)" font-size="1.4732" >1/8</text>
+<text x="141.28" y="-7.628"  font-size="1.4732" >G</text>
+<text x="146.28" y="-4.628"  font-size="1.4732" >S</text>
+<text x="144.78" y="-10.628"  font-size="1.4732" >+</text>
+<text x="145.28" y="-5.628" transform="rotate(-180,145.28,-5.628)" font-size="1.4732" >NMOS</text>
+<text x="133.406" y="-7.628"  font-size="1.4732" >G</text>
+<text x="138.406" y="-10.628"  font-size="1.4732" >S</text>
+<text x="136.906" y="-10.628"  font-size="1.4732" >+</text>
+<text x="133.464578125" y="-5.928" transform="rotate(-337.5,133.464578125,-5.928)" font-size="1.4732" >PMOS</text>
+<text x="141.566" y="-14.224"  font-size="1.4732" >Anode&nbsp;&nbsp;Cathode</text>
+<text x="141.566" y="-12.524000000000001"  font-size="1.4732" >+</text>
+<text x="153.366" y="-12.624"  font-size="1.4732" >-</text>
+<text x="130.386" y="-3.6579999999999995"  font-size="1.4732" >E</text>
+<text x="130.386" y="-8.958"  font-size="1.4732" >C</text>
+<text x="126.286" y="-7.1579999999999995"  font-size="1.4732" >B</text>
+<text x="125.986" y="-5.1579999999999995" transform="rotate(-315,125.986,-5.1579999999999995)" font-size="1.4732" >NPN</text>
+<text x="130.386" y="-11.024000000000001"  font-size="1.4732" >C</text>
+<text x="130.386" y="-16.324"  font-size="1.4732" >E</text>
+<text x="126.286" y="-14.524000000000001"  font-size="1.4732" >B</text>
+<text x="125.986" y="-12.524000000000001" transform="rotate(-315,125.986,-12.524000000000001)" font-size="1.4732" >PNP</text>
+</g><!--text-->
+<g fill="#f80" transform="scale(1,-1)" ><!--smd-->
 <rect x="18.900000000000002" y="10.6148" width="0.3" height="0.3" transform="rotate(90,19.05,10.764800000000001)" /> <!--E$16-->
 <rect x="18.900000000000002" y="10.0148" width="0.3" height="0.3" transform="rotate(90,19.05,10.1648)" /> <!--E$16-->
 <rect x="20.324" y="10.36" width="0.5" height="0.6" transform="rotate(90,20.574,10.66)" /> <!--E$23-->
@@ -169,27 +290,27 @@
 <rect x="18.900000000000002" y="7.678" width="0.3" height="0.3" transform="rotate(90,19.05,7.828)" /> <!--E$63-->
 </g><!--smd-->
 <g fill="#000"><!--hole-->
-<circle cx="152.2235" cy="17.674" r="1.63" /> <!--E$46-->
-<circle cx="148.3385" cy="17.848999999999997" r="1.455" /> <!--E$46-->
-<circle cx="144.7885" cy="18.009" r="1.295" /> <!--E$46-->
-<circle cx="141.5435" cy="18.154" r="1.15" /> <!--E$46-->
-<circle cx="138.5685" cy="18.279" r="1.025" /> <!--E$46-->
-<circle cx="135.8285" cy="18.389" r="0.915" /> <!--E$46-->
-<circle cx="133.2985" cy="18.488999999999997" r="0.815" /> <!--E$46-->
-<circle cx="130.9585" cy="18.578999999999997" r="0.725" /> <!--E$46-->
-<circle cx="128.7885" cy="18.659" r="0.645" /> <!--E$46-->
-<circle cx="126.7685" cy="18.729" r="0.575" /> <!--E$46-->
-<circle cx="124.8835" cy="18.793999999999997" r="0.51" /> <!--E$46-->
-<circle cx="123.1175" cy="18.848" r="0.456" /> <!--E$46-->
-<circle cx="121.4555" cy="18.898" r="0.406" /> <!--E$46-->
-<circle cx="119.888" cy="18.9425" r="0.3615" /> <!--E$46-->
-<circle cx="118.364" cy="18.982" r="0.322" /> <!--E$46-->
-<circle cx="116.84" cy="19.0175" r="0.2865" /> <!--E$46-->
-<circle cx="115.316" cy="19.048499999999997" r="0.2555" /> <!--E$46-->
-<circle cx="113.792" cy="19.0765" r="0.2275" /> <!--E$46-->
-<circle cx="112.268" cy="19.101499999999998" r="0.2025" /> <!--E$46-->
-<circle cx="110.744" cy="19.1235" r="0.1805" /> <!--E$46-->
-<circle cx="109.22" cy="19.1435" r="0.1605" /> <!--E$46-->
+<circle cx="152.2235" cy="-17.674" r="1.63" /> <!--E$46-->
+<circle cx="148.3385" cy="-17.848999999999997" r="1.455" /> <!--E$46-->
+<circle cx="144.7885" cy="-18.009" r="1.295" /> <!--E$46-->
+<circle cx="141.5435" cy="-18.154" r="1.15" /> <!--E$46-->
+<circle cx="138.5685" cy="-18.279" r="1.025" /> <!--E$46-->
+<circle cx="135.8285" cy="-18.389" r="0.915" /> <!--E$46-->
+<circle cx="133.2985" cy="-18.488999999999997" r="0.815" /> <!--E$46-->
+<circle cx="130.9585" cy="-18.578999999999997" r="0.725" /> <!--E$46-->
+<circle cx="128.7885" cy="-18.659" r="0.645" /> <!--E$46-->
+<circle cx="126.7685" cy="-18.729" r="0.575" /> <!--E$46-->
+<circle cx="124.8835" cy="-18.793999999999997" r="0.51" /> <!--E$46-->
+<circle cx="123.1175" cy="-18.848" r="0.456" /> <!--E$46-->
+<circle cx="121.4555" cy="-18.898" r="0.406" /> <!--E$46-->
+<circle cx="119.888" cy="-18.9425" r="0.3615" /> <!--E$46-->
+<circle cx="118.364" cy="-18.982" r="0.322" /> <!--E$46-->
+<circle cx="116.84" cy="-19.0175" r="0.2865" /> <!--E$46-->
+<circle cx="115.316" cy="-19.048499999999997" r="0.2555" /> <!--E$46-->
+<circle cx="113.792" cy="-19.0765" r="0.2275" /> <!--E$46-->
+<circle cx="112.268" cy="-19.101499999999998" r="0.2025" /> <!--E$46-->
+<circle cx="110.744" cy="-19.1235" r="0.1805" /> <!--E$46-->
+<circle cx="109.22" cy="-19.1435" r="0.1605" /> <!--E$46-->
 </g><!--hole-->
 </g>
 </svg>
