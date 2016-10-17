@@ -8,6 +8,7 @@
 
 var fs = require('fs');
 var EagleBRD = require("./../lib/eaglebrd");
+var Gerber = require("./../lib/gerber");
 
         /**
          * Output application version number.
@@ -181,6 +182,26 @@ var EagleBRD = require("./../lib/eaglebrd");
                 }
             });
         }
+        function processGerber(options) {
+            var layers = Object.keys(options.layers);
+            var grb = new Gerber();
+            for (var iLayer=0; iLayer<layers.length; iLayer++)  {
+                var id = layers[iLayer];
+                var path = options.layers[id];
+                fs.readFile(path, function(err, data) {
+                    if (err) {
+                        console.log(err);
+                        process.exit(err.errno);
+                    }
+                    var layer = grb.parseLayer(id, data);
+                    for (var i = 0; i < layer.graphics.length; i++) {
+                        var graphic = layer.graphics[i];
+                        console.log(JSON.stringify(graphic));
+                    }
+                });
+            }
+
+        }
 
         var version = false;
         var help = false;
@@ -188,6 +209,9 @@ var EagleBRD = require("./../lib/eaglebrd");
             path:null,
             layer:"Top",
             show:"SMD",
+        };
+        var gerber = {
+            layers:{},
         };
         var output = "CSV";
 
@@ -201,6 +225,18 @@ var EagleBRD = require("./../lib/eaglebrd");
 
                 case '--layer':
                     eagle.layer = process.argv[++iArg];
+                    break;
+                case '--gtl':
+                    gerber.layers.gtl = process.argv[++iArg];
+                    break;
+                case '--gto':
+                    gerber.layers.gto = process.argv[++iArg];
+                    break;
+                case '--gtp':
+                    gerber.layers.gtp = process.argv[++iArg];
+                    break;
+                case '--gts':
+                    gerber.layers.gts = process.argv[++iArg];
                     break;
                 case '-o':
                 case '--out':
@@ -231,6 +267,9 @@ var EagleBRD = require("./../lib/eaglebrd");
         } else if (eagle.path) {
             eagle.output = output;
             processEagleBRD(eagle);
+        } else if (Object.keys(gerber.layers).length) {
+            gerber.output = output;
+            processGerber(gerber);
         } else {
             outputHelp();
         }
