@@ -87,7 +87,8 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
         process.exit(0);
     }
 
-    function processEagleSVG(brd, smds, holes, options) {
+    JSPcb.prototype.processEagleSVG = function(brd, smds, holes, options) {
+        var that = this;
         var bounds = brd.bounds;
         var width = bounds.r - bounds.l;
         var height = bounds.b - bounds.t;
@@ -95,7 +96,7 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
         var layerPad = brd.isBottomLayer(layerNumber) ? "16" : "1";
         var layerSilk = brd.isBottomLayer(layerNumber) ? "22" : "21";
 
-        new PcbSvgFactory().create({
+        new PcbSvgFactory(that.options).create({
             dimWires: brd.pcbWires("Dimension"),
             bounds: bounds,
             smds: smds,
@@ -103,7 +104,8 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
             texts: brd.pcbText(layerSilk),
         });
     }
-    function processEagleBRD(options) {
+    JSPcb.prototype.processEagleBRD = function(options) {
+        var that = this;
         fs.readFile(options.path, function(err, data) {
             if (err) {
                 console.log(err);
@@ -130,59 +132,69 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
                 }
             }
             if (options.output.toUpperCase() === "SVG") {
-                processEagleSVG(brd, smds, holes, options);
+                that.processEagleSVG(brd, smds, holes, options);
             }
         });
     }
-    PcbSvg.prototype.processGerber = function(options) {
+    JSPcb.prototype.parseOptions = function(options) {
         var that = this;
-        var layers = Object.keys(options.layers);
+        if ((typeof options === "string") || (options instanceof Buffer)) {
+            options = JSON.parse(options);
+        }
+        options = options || {};
+        if (options.bounds && options.bounds.units) {
+            options.bounds.l *= options.bounds.units;
+            options.bounds.t *= options.bounds.units;
+            options.bounds.r *= options.bounds.units;
+            options.bounds.b *= options.bounds.units;
+        }
+        that.options = options;
+        that.verbose && console.log("JSON options:", JSON.stringify(options, null, " "));
+    }
+    JSPcb.prototype.processGerber = function(parms) {
+        var that = this;
+        var layers = Object.keys(parms.layers);
         var grb = new Gerber();
-        //var smds = [];
         for (var iLayer=0; iLayer<layers.length; iLayer++)  {
             var key = layers[iLayer];
             var id = key.toUpperCase();
-            var path = options.layers[key];
+            var path = parms.layers[key];
             var data = fs.readFileSync(path);
             that.verbose && console.log("processGerber() id:"+id, "path:"+path);
             var layer = grb.parseLayer(id, data);
-            //for (var iGr = 0; iGr < layer.graphics.length; iGr++) {
-                //var graphic = layer.graphics[iGr];
-                //smds.push(graphic);
-                //console.log(smds.length, JSON.stringify(graphic));
-            //}
         }
-        new PcbSvgFactory().create({
+        new PcbSvgFactory(that.options).create({
             smds: grb.pcbPads(),
             dimWires: grb.pcbWires("GKO"),
         });
     }
 
-    function PcbSvg(argv) {
+    function JSPcb(argv) {
         var that = this;
         that.verbose = false;
         that.version = false;
+        that.optiosn = {};
 
         that.processArgs(argv);
 
-        that.verbose && console.log("pcbsvg command line");
+        that.verbose && console.log("jspcb command line");
         if (that.version) {
             outputVersion();
-        } else if (help) {
+        } else if (help || argv.length <= 2) {
             outputHelp();
         } else if (eagle.path) {
             eagle.output = output;
-            processEagleBRD(eagle);
+            that.processEagleBRD(eagle);
         } else if (Object.keys(gerber.layers).length) {
             gerber.output = output;
             that.processGerber(gerber);
         } else {
-            outputHelp();
+            // do nothing
         }
         return that;
     }
 
-    PcbSvg.prototype.processArgs = function(argv) {
+    JSPcb.prototype.processArgs = function(argv) {
         var that = this;
         for (var iArg = 2; iArg < process.argv.length; iArg++) {
             var arg = argv[iArg];
@@ -243,6 +255,11 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
                 case '--verbose':
                     that.verbose = true;
                     break;
+                case '-j':
+                case '--json':
+                    var options = fs.readFileSync(argv[++iArg]);
+                    that.parseOptions(options);
+                    break;
                 default:
                     console.log("unexpected argument:", arg);
                     process.exit(22);
@@ -251,10 +268,9 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
         }
     }
 
-    module.exports = exports.PcbSvg = PcbSvg;
+    module.exports = exports.JSPcb = JSPcb;
 })(typeof exports === "object" ? exports : (exports = {}));
 
-var PcbSvg = exports.PcbSvg;
-
-var pcbsvg = new PcbSvg(process.argv);
+var JSPcb = exports.JSPcb;
+var jspcb = new JSPcb(process.argv);
 

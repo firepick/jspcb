@@ -1,7 +1,7 @@
 {
   "name": "jspcb",
   "description": "Javascript library for parsing printed circuit board (PCB) files (e.g., Eagle *.brd)",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": {
     "name": "Karl Lew",
     "email": "karl@firepick.org",
@@ -45,6 +45,7 @@
   "license": "MIT",
   "dependencies": {
     "mathjs": "3.5.3",
+    "svg2png": "4.0.0",
     "xmldom": "0.1.22"
   },
   "devDependencies": {
@@ -60,7 +61,7 @@
     "should": "5.0.1"
   },
   "bin": {
-    "jspcb": "./bin/cli.js"
+    "jspcb": "./bin/jspcb.js"
   },
   "directories": {
     "lib": "lib"

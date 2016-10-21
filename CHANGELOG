@@ -1,3 +1,21 @@
+0.0.5
+-----
+* -json JSON configuration file
+
+0.0.4
+-----
+* --eagle Eagle BRD file input
+* --gbl  Gerber bottom copper file
+* --gbo  Gerber bottom silkscreen file
+* --gbs  Gerber bottom soldermask file
+* --gko  Gerber keepout file (Altium/Protel board outline)
+* --gml  Gerber mill file
+* --gtl  Gerber top copper file
+* --gto  Gerber top silkscreen file
+* --gtp  Gerber top paste file
+* --gts  Gerber top soldermask file
+* --txt  Gerber drill file file
+
 0.0.3
 -----
 * update package.json dependencies
