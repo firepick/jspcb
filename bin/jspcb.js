@@ -25,6 +25,31 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
     var output = "CSV";
     var verbose = false;
 
+    function JSPcb(argv) {
+        var that = this;
+        that.verbose = false;
+        that.version = false;
+        that.optiosn = {};
+
+        that.processArgs(argv);
+
+        that.verbose && console.log("jspcb command line");
+        if (that.version) {
+            outputVersion();
+        } else if (help || argv.length <= 2) {
+            outputHelp();
+        } else if (eagle.path) {
+            eagle.output = output;
+            that.processEagleBRD(eagle);
+        } else if (Object.keys(gerber.layers).length) {
+            gerber.output = output;
+            that.processGerber(gerber);
+        } else {
+            // do nothing
+        }
+        return that;
+    }
+
     /**
      * Output application version number.
      * Version number is read version from package.json.
@@ -169,30 +194,6 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
         });
     }
 
-    function JSPcb(argv) {
-        var that = this;
-        that.verbose = false;
-        that.version = false;
-        that.optiosn = {};
-
-        that.processArgs(argv);
-
-        that.verbose && console.log("jspcb command line");
-        if (that.version) {
-            outputVersion();
-        } else if (help || argv.length <= 2) {
-            outputHelp();
-        } else if (eagle.path) {
-            eagle.output = output;
-            that.processEagleBRD(eagle);
-        } else if (Object.keys(gerber.layers).length) {
-            gerber.output = output;
-            that.processGerber(gerber);
-        } else {
-            // do nothing
-        }
-        return that;
-    }
 
     JSPcb.prototype.processArgs = function(argv) {
         var that = this;
@@ -274,3 +275,7 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
 var JSPcb = exports.JSPcb;
 var jspcb = new JSPcb(process.argv);
 
+(typeof describe === 'function') && describe("Gerber", function() {
+    var should = require("should");
+    var JSPcb = exports.JSPcb; // require("./jspcb");
+})
