@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE eagle SYSTEM "eagle.dtd">
+<eagle version="6.4">
+    <drawing>
+        <settings>
+            <setting alwaysvectorfont="yes"/>
+            <setting verticaltext="up"/>
+        </settings>
+        <grid distance="0.01" unitdist="inch" unit="inch" style="lines" multiple="1"  
+            display="yes" altdistance="0.0001" altunitdist="inch" altunit="inch"/>
+        <layers>
+            <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
+            <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
+            <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
+            <layer number="21" name="tPlace" color="7" fill="1" visible="yes" active="yes"/>
+            <layer number="22" name="bPlace" color="7" fill="1" visible="yes" active="yes"/>
+        </layers>
+        <board>
+            <plain>
+                <wire x1="0" y1="0" x2="0" y2="25.4" width="0" layer="20"/>
+                <wire x1="0" y1="25.4" x2="154.94" y2="25.4" width="0" layer="20"/>
+                <wire x1="154.94" y1="25.4" x2="154.94" y2="0" width="0" layer="20"/>
+                <wire x1="154.94" y1="0" x2="0" y2="0" width="0" layer="20"/>
+                <rectangle x1="1.524" y1="17.5768" x2="10.922" y2="17.9832" layer="29"/>
+                <text x="24.13" y="11.43" size="1.016" layer="21" 
+                    ratio="10" rot="R90">0201(0603)\n0402(1005)\n0603(1608)\n0805(2012)</text>
+            </plain>
+            <libraries>
+                <library name="Reference Ruler">
+                    <packages>
+                        <package name="0201">
+                            <smd name="P$1" x="-0.3" y="0" dx="0.3" dy="0.3" layer="1"/>
+                            <smd name="P$2" x="0.3" y="0" dx="0.3" dy="0.3" layer="1"/>
+                        </package>
+                        <package name="0402">
+                            <smd name="1" x="-0.5" y="0" dx="0.5" dy="0.6" layer="1"/>
+                            <smd name="2" x="0.5" y="0" dx="0.5" dy="0.6" layer="1" rot="R90"/>
+                            <rectangle x1="-0.1999" y1="-0.3" x2="0.1999" y2="0.3" layer="35"/>
+                            <wire x1="-0.1" y1="0.2" x2="0.1" y2="0.2" width="0.15" layer="21"/>
+                            <wire x1="-0.1" y1="-0.2" x2="0.1" y2="-0.2" width="0.15" layer="21"/>
+                        </package>
+                        <package name="ALL-HOLES">
+                            <hole x="43.0035" y="-1.63" drill="3.26"/>
+                            <text x="1" y="2" size="1.016" layer="21" ratio="10" rot="R90">Holes</text>
+                        </package>
+                    </packages>
+                </library>
+            </libraries>
+            <elements>
+                <element name="E$16" library="Reference Ruler" package="0201" value="" x="19.05" y="10.4648" rot="R90"/>
+                <element name="E$23" library="Reference Ruler" package="0402" value="" x="20.574" y="10.16" rot="R90"/>
+                <element name="E$71" library="Reference Ruler" package="0201" value="" x="19.05" y="10.4648" rot="MR90"/>
+                <element name="E$46" library="Reference Ruler" package="ALL-HOLES" value="" x="109.22" y="19.304"/>
+            </elements>
+        </board>
+    </drawing>
+</eagle>
