@@ -9,11 +9,9 @@
 var fs = require('fs');
 var EagleBRD = require("./../lib/eaglebrd");
 var Gerber = require("./../lib/gerber");
-var PcbSvgFactory = require("./../lib/pcbsvg");
+var PcbTransform = require("./../lib/pcbtransform");
 
 (function(exports) {
-    var version = false;
-    var help = false;
     var eagle = {
         path:null,
         layer:"Top",
@@ -28,43 +26,67 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
     function JSPcb(argv) {
         var that = this;
         that.verbose = false;
-        that.version = false;
-        that.optiosn = {};
+        that.options = {};
+        that.pcbx = new PcbTransform();
 
         that.processArgs(argv);
 
         that.verbose && console.log("jspcb command line");
-        if (that.version) {
-            outputVersion();
-        } else if (help || argv.length <= 2) {
+        if (argv.length <= 2) {
             outputHelp();
         } else if (eagle.path) {
-            eagle.output = output;
-            that.processEagleBRD(eagle);
+            that.pcbx.readEagleBrd(eagle.path);
         } else if (Object.keys(gerber.layers).length) {
-            gerber.output = output;
-            that.processGerber(gerber);
+            that.pcbx.readGerber(gerber.layers);
         } else {
             // do nothing
+        }
+        if (that.svgFile) {
+            var writer = new FileWriter(that.svgFile);
+            that.pcbx.writeSvg({
+                writer: writer,
+                layers: {
+                    Top:true,
+                },
+            });
+            writer.close();
+        }
+        if (that.csvSmdPads) {
+            var writer = new FileWriter(that.csvSmdPads);
+            that.pcbx.writeCsv({ smdpads: writer });
+            writer.close();
+        }
+        if (that.csvHoles) {
+            var writer = new FileWriter(that.csvHoles);
+            that.pcbx.writeCsv({ holes: writer });
+            writer.close();
         }
         return that;
     }
 
-    /**
-     * Output application version number.
-     * Version number is read version from package.json.
-     */
-    function outputVersion() {
-        fs.readFile(__dirname + '/../package.json', function(err, data) {
-            if (err) {
-                console.log(err.toString());
-            } else {
-                var pkg = JSON.parse(data);
-                var version = pkg && pkg.version ? pkg.version : 'unknown';
-                console.log(version);
-            }
-            process.exit(0);
-        });
+    function FileWriter(path) {
+        var that = this;
+        that.path = path;
+        console.log("FilewWriter("+path+")");
+        var ws = that.ws = fs.createWriteStream(path);
+        return that;
+    }
+    FileWriter.prototype.close = function() {
+        var that = this;
+        that.ws.end();
+        return that;
+    }
+    FileWriter.prototype.log = function() {
+        var that = this;
+        var line = "";
+        for (var iArg = 0; iArg < arguments.length; iArg++) {
+            var arg = arguments[iArg];
+            iArg && (line += " ");
+            line += arg;
+        }
+        line += '\n';
+        that.ws.write(line);
+        return that;
     }
 
     /**
@@ -112,55 +134,6 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
         process.exit(0);
     }
 
-    JSPcb.prototype.processEagleSVG = function(brd, smds, holes, options) {
-        var that = this;
-        var bounds = brd.bounds;
-        var width = bounds.r - bounds.l;
-        var height = bounds.b - bounds.t;
-        var layerNumber = brd.getLayerNumber(options.layer);
-        var layerPad = brd.isBottomLayer(layerNumber) ? "16" : "1";
-        var layerSilk = brd.isBottomLayer(layerNumber) ? "22" : "21";
-
-        new PcbSvgFactory(that.options).create({
-            dimWires: brd.pcbWires("Dimension"),
-            bounds: bounds,
-            smds: smds,
-            holes: holes,
-            texts: brd.pcbText(layerSilk),
-        });
-    }
-    JSPcb.prototype.processEagleBRD = function(options) {
-        var that = this;
-        fs.readFile(options.path, function(err, data) {
-            if (err) {
-                console.log(err);
-                process.exit(err.errno);
-            }
-            var xml = data.toString();
-            var brd = new EagleBRD(xml);
-            var smds = [];
-            var holes = brd.pcbHoles();
-            if (options.show.toUpperCase() === "SMD") {
-                smds = brd.pcbPads(options.layer);
-            }
-            if (options.output.toUpperCase() === "CSV") {
-                console.log("#,ELEMENT,PACKAGE,PAD,X,Y,W,H,ANGLE,ROUNDNESS");
-                for (var iSMD = 0; iSMD < smds.length; iSMD++) {
-                    var smd = smds[iSMD];
-                    console.log( iSMD+1+","+
-                        smd.element+","+
-                        smd.package+","+
-                        smd.name+", "+
-                        smd.x+","+smd.y+","+
-                        smd.w+","+smd.h+","+
-                        smd.angle+","+smd.roundness);
-                }
-            }
-            if (options.output.toUpperCase() === "SVG") {
-                that.processEagleSVG(brd, smds, holes, options);
-            }
-        });
-    }
     JSPcb.prototype.parseOptions = function(options) {
         var that = this;
         if ((typeof options === "string") || (options instanceof Buffer)) {
@@ -176,24 +149,6 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
         that.options = options;
         that.verbose && console.log("JSON options:", JSON.stringify(options, null, " "));
     }
-    JSPcb.prototype.processGerber = function(parms) {
-        var that = this;
-        var layers = Object.keys(parms.layers);
-        var grb = new Gerber();
-        for (var iLayer=0; iLayer<layers.length; iLayer++)  {
-            var key = layers[iLayer];
-            var id = key.toUpperCase();
-            var path = parms.layers[key];
-            var data = fs.readFileSync(path);
-            that.verbose && console.log("processGerber() id:"+id, "path:"+path);
-            var layer = grb.parseLayer(id, data);
-        }
-        new PcbSvgFactory(that.options).create({
-            smds: grb.pcbPads(),
-            dimWires: grb.pcbWires("GKO"),
-        });
-    }
-
 
     JSPcb.prototype.processArgs = function(argv) {
         var that = this;
@@ -202,7 +157,7 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
             switch (arg) {
                 case '-v':
                 case '--version':
-                    version = true;
+                    console.log("JsPCB v" + that.pcbx.version());
                     break;
 
                 case '--layer':
@@ -238,6 +193,15 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
                 case '--txt': // drill file
                     gerber.layers.txt = argv[++iArg];
                     break;
+                case '--svg': // SVG output file
+                    that.svgFile = argv[++iArg];
+                    break;
+                case '--csv-holes': // CSV output file
+                    that.csvHoles = argv[++iArg];
+                    break;
+                case '--csv-smdpads': // CSV output file
+                    that.csvSmdPads = argv[++iArg];
+                    break;
                 case '-o':
                 case '--out':
                 case '--output':
@@ -251,7 +215,7 @@ var PcbSvgFactory = require("./../lib/pcbsvg");
                     break;
                 case '-h':
                 case '--help':
-                    help = true;
+                    outputHelp();
                     break;
                 case '--verbose':
                     that.verbose = true;
