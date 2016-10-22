@@ -1,6 +1,18 @@
+0.1.0
+-----
+Revised command line interface and removed:
+* --layer
+* --out
+* --show
+Added output file parameters:
+* --png
+* --csv-holes
+* --csv-smdpads
+* --svg
+
 0.0.5
 -----
-* -json JSON configuration file
+* --json JSON configuration file
 
 0.0.4
 -----

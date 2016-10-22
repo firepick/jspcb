@@ -1,15 +1,61 @@
 #!/usr/bin/env node
 
-/**
- * jspcb
- *
- * https://github.com/firepick/jspcb
- */
+const help = [
+"jspcb -- Javascript library for parsing PCB board files",
+"",
+"DESCRIPTION",
+"Command line utility for jspcb package, which reads",
+"common PCB file formats such as Gerber or Eagle BRD and",
+"generates SVG, PNG or CSV files.",
+"",
+"URL",
+"   https://github.com/firepick/jspcb",
+"",
+"USAGE",
+"	jspcb {OPTIONS}",
+"",
+"OPTIONS",
+"    -v --version",
+"        Print version number",
+"    --verbose",
+"        Print verbose output",
+"    -h --help",
+"        Print these instructions",
+"    --csv-holes PATH",
+"        Generate CSV file for PCB holes",
+"    --csv-smdpads PATH",
+"        Generate CSV file for PCB SMD pads",
+"    --svg PATH",
+"        Generate SVG file",
+"    --png PATH",
+"        Generate PNG file",
+"    --gbl PATH",
+"        Read Gerber bottom copper file",
+"    --gbo PATH",
+"        Read Gerber bottom silkscreen file",
+"    --gbs PATH",
+"        Read Gerber bottom soldermask file",
+"    --gko PATH",
+"        Read Gerber keepout file (Altium/Protel board outline)",
+"    --gml PATH",
+"        Read Gerber mill file",
+"    --gtl PATH",
+"        Read Gerber top copper file",
+"    --gto PATH",
+"        Read Gerber top silkscreen file",
+"    --gtp PATH",
+"        Read Gerber top paste file",
+"    --gts PATH",
+"        Read Gerber top soldermask file",
+"    --txt PATH",
+"        Read Gerber drill file",
+""];
 
-var fs = require('fs');
-var EagleBRD = require("./../lib/eaglebrd");
-var Gerber = require("./../lib/gerber");
-var PcbTransform = require("./../lib/pcbtransform");
+const fs = require('fs');
+const EagleBRD = require("./../lib/eaglebrd");
+const Gerber = require("./../lib/gerber");
+const PcbTransform = require("./../lib/pcbtransform");
+const LogFile = require("./../lib/logfile");
 
 (function(exports) {
     var eagle = {
@@ -33,7 +79,7 @@ var PcbTransform = require("./../lib/pcbtransform");
 
         that.verbose && console.log("jspcb command line");
         if (argv.length <= 2) {
-            outputHelp();
+            showHelp();
         } else if (eagle.path) {
             that.pcbx.readEagleBrd(eagle.path);
         } else if (Object.keys(gerber.layers).length) {
@@ -42,7 +88,7 @@ var PcbTransform = require("./../lib/pcbtransform");
             // do nothing
         }
         if (that.svgFile) {
-            var writer = new FileWriter(that.svgFile);
+            var writer = new LogFile(that.svgFile);
             that.pcbx.writeSvg({
                 writer: writer,
                 layers: {
@@ -52,86 +98,23 @@ var PcbTransform = require("./../lib/pcbtransform");
             writer.close();
         }
         if (that.csvSmdPads) {
-            var writer = new FileWriter(that.csvSmdPads);
+            var writer = new LogFile(that.csvSmdPads);
             that.pcbx.writeCsv({ smdpads: writer });
             writer.close();
         }
         if (that.csvHoles) {
-            var writer = new FileWriter(that.csvHoles);
+            var writer = new LogFile(that.csvHoles);
             that.pcbx.writeCsv({ holes: writer });
             writer.close();
         }
+        (that.png) && that.pcbx.writePng(that.png);
         return that;
     }
 
-    function FileWriter(path) {
-        var that = this;
-        that.path = path;
-        console.log("FilewWriter("+path+")");
-        var ws = that.ws = fs.createWriteStream(path);
-        return that;
-    }
-    FileWriter.prototype.close = function() {
-        var that = this;
-        that.ws.end();
-        return that;
-    }
-    FileWriter.prototype.log = function() {
-        var that = this;
-        var line = "";
-        for (var iArg = 0; iArg < arguments.length; iArg++) {
-            var arg = arguments[iArg];
-            iArg && (line += " ");
-            line += arg;
+    function showHelp() {
+        for (var iHelp = 0; iHelp < help.length; iHelp++) {
+            console.log(help[iHelp]);
         }
-        line += '\n';
-        that.ws.write(line);
-        return that;
-    }
-
-    /**
-     * Output a help message
-     */
-    function outputHelp() {
-        console.log('jspcb -- Javascript library for parsing PCB board files');
-        console.log('\nUSAGE');
-        console.log('\tjspcb {OPTIONS}');
-        console.log('\nOPTIONS');
-        console.log('-v --version');
-        console.log('\tPrint version number');
-        console.log('--verbose');
-        console.log('\tPrint verbose output');
-        console.log('-h --help');
-        console.log('\tPrint these instructions');
-        console.log('--layer LAYER');
-        console.log('\tFilter for layer (default is "Top")');
-        console.log('--show OBJECT');
-        console.log('\tFilter for object to show (default is "SMD")');
-        console.log('-o --out');
-        console.log('\tOutput format (CSV, SVG)');
-        console.log('--svg');
-        console.log('\tGenerate SVG to stdout');
-        console.log('--gbl PATH');
-        console.log('\tGerber bottom copper file');
-        console.log('--gbo PATH');
-        console.log('\tGerber bottom silkscreen file');
-        console.log('--gbs PATH');
-        console.log('\tGerber bottom soldermask file');
-        console.log('--gko PATH');
-        console.log('\tGerber keepout file (Altium/Protel board outline)');
-        console.log('--gml PATH');
-        console.log('\tGerber mill file');
-        console.log('--gtl PATH');
-        console.log('\tGerber top copper file');
-        console.log('--gto PATH');
-        console.log('\tGerber top silkscreen file');
-        console.log('--gtp PATH');
-        console.log('\tGerber top paste file');
-        console.log('--gts PATH');
-        console.log('\tGerber top soldermask file');
-        console.log('--txt PATH');
-        console.log('\tGerber drill file file');
-        process.exit(0);
     }
 
     JSPcb.prototype.parseOptions = function(options) {
@@ -158,10 +141,6 @@ var PcbTransform = require("./../lib/pcbtransform");
                 case '-v':
                 case '--version':
                     console.log("JsPCB v" + that.pcbx.version());
-                    break;
-
-                case '--layer':
-                    eagle.layer = argv[++iArg];
                     break;
                 case '--gbl': // bottom copper
                     gerber.layers.gtl = argv[++iArg];
@@ -202,20 +181,15 @@ var PcbTransform = require("./../lib/pcbtransform");
                 case '--csv-smdpads': // CSV output file
                     that.csvSmdPads = argv[++iArg];
                     break;
-                case '-o':
-                case '--out':
-                case '--output':
-                    output = argv[++iArg].toUpperCase();
-                    break;
-                case '--show':
-                    eagle.show = argv[++iArg];
+                case '--png': // PNG output file
+                    that.png = argv[++iArg];
                     break;
                 case '--eagle':
                     eagle.path = argv[++iArg];
                     break;
                 case '-h':
                 case '--help':
-                    outputHelp();
+                    showHelp();
                     break;
                 case '--verbose':
                     that.verbose = true;
@@ -242,4 +216,5 @@ var jspcb = new JSPcb(process.argv);
 (typeof describe === 'function') && describe("Gerber", function() {
     var should = require("should");
     var JSPcb = exports.JSPcb; // require("./jspcb");
+    // TODO
 })
