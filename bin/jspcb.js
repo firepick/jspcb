@@ -78,9 +78,9 @@ const LogFile = require("./../lib/logfile");
         that.processArgs(argv);
 
         that.verbose && console.log("jspcb command line");
-        if (argv.length <= 2) {
-            showHelp();
-        } else if (eagle.path) {
+        argv.length <= 2 && process.exit(showHelp());
+
+        if (eagle.path) {
             that.pcbx.readEagleBrd(eagle.path);
         } else if (Object.keys(gerber.layers).length) {
             that.pcbx.readGerber(gerber.layers);
@@ -115,6 +115,7 @@ const LogFile = require("./../lib/logfile");
         for (var iHelp = 0; iHelp < help.length; iHelp++) {
             console.log(help[iHelp]);
         }
+        return 0;
     }
 
     JSPcb.prototype.parseOptions = function(options) {
@@ -189,7 +190,7 @@ const LogFile = require("./../lib/logfile");
                     break;
                 case '-h':
                 case '--help':
-                    showHelp();
+                    process.exit(showHelp());
                     break;
                 case '--verbose':
                     that.verbose = true;
