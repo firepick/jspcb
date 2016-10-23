@@ -1,55 +1,56 @@
 #!/usr/bin/env node
 
 const help = [
-"jspcb -- Javascript library for parsing PCB board files",
-"",
-"DESCRIPTION",
-"Command line utility for jspcb package, which reads",
-"common PCB file formats such as Gerber or Eagle BRD and",
-"generates SVG, PNG or CSV files.",
-"",
-"URL",
-"   https://github.com/firepick/jspcb",
-"",
-"USAGE",
-"	jspcb {OPTIONS}",
-"",
-"OPTIONS",
-"    -v --version",
-"        Print version number",
-"    --verbose",
-"        Print verbose output",
-"    -h --help",
-"        Print these instructions",
-"    --csv-holes PATH",
-"        Generate CSV file for PCB holes",
-"    --csv-smdpads PATH",
-"        Generate CSV file for PCB SMD pads",
-"    --svg PATH",
-"        Generate SVG file",
-"    --png PATH",
-"        Generate PNG file",
-"    --gbl PATH",
-"        Read Gerber bottom copper file",
-"    --gbo PATH",
-"        Read Gerber bottom silkscreen file",
-"    --gbs PATH",
-"        Read Gerber bottom soldermask file",
-"    --gko PATH",
-"        Read Gerber keepout file (Altium/Protel board outline)",
-"    --gml PATH",
-"        Read Gerber mill file",
-"    --gtl PATH",
-"        Read Gerber top copper file",
-"    --gto PATH",
-"        Read Gerber top silkscreen file",
-"    --gtp PATH",
-"        Read Gerber top paste file",
-"    --gts PATH",
-"        Read Gerber top soldermask file",
-"    --txt PATH",
-"        Read Gerber drill file",
-""];
+    "jspcb -- Javascript library for parsing PCB board files",
+    "",
+    "DESCRIPTION",
+    "Command line utility for jspcb package, which reads",
+    "common PCB file formats such as Gerber or Eagle BRD and",
+    "generates SVG, PNG or CSV files.",
+    "",
+    "URL",
+    "   https://github.com/firepick/jspcb",
+    "",
+    "USAGE",
+    "	jspcb {OPTIONS}",
+    "",
+    "OPTIONS",
+    "    -v --version",
+    "        Print version number",
+    "    --verbose",
+    "        Print verbose output",
+    "    -h --help",
+    "        Print these instructions",
+    "    --csv-holes PATH",
+    "        Generate CSV file for PCB holes",
+    "    --csv-smdpads PATH",
+    "        Generate CSV file for PCB SMD pads",
+    "    --svg PATH",
+    "        Generate SVG file",
+    "    --png PATH",
+    "        Generate PNG file",
+    "    --gbl PATH",
+    "        Read Gerber bottom copper file",
+    "    --gbo PATH",
+    "        Read Gerber bottom silkscreen file",
+    "    --gbs PATH",
+    "        Read Gerber bottom soldermask file",
+    "    --gko PATH",
+    "        Read Gerber keepout file (Altium/Protel board outline)",
+    "    --gml PATH",
+    "        Read Gerber mill file",
+    "    --gtl PATH",
+    "        Read Gerber top copper file",
+    "    --gto PATH",
+    "        Read Gerber top silkscreen file",
+    "    --gtp PATH",
+    "        Read Gerber top paste file",
+    "    --gts PATH",
+    "        Read Gerber top soldermask file",
+    "    --txt PATH",
+    "        Read Gerber drill file",
+    ""
+];
 
 const fs = require('fs');
 const EagleBRD = require("./../lib/eaglebrd");
@@ -59,12 +60,12 @@ const LogFile = require("./../lib/logfile");
 
 (function(exports) {
     var eagle = {
-        path:null,
-        layer:"Top",
-        show:"SMD",
+        path: null,
+        layer: "Top",
+        show: "SMD",
     };
     var gerber = {
-        layers:{},
+        layers: {},
     };
     var output = "CSV";
     var verbose = false;
@@ -92,19 +93,23 @@ const LogFile = require("./../lib/logfile");
             that.pcbx.writeSvg({
                 writer: writer,
                 layers: {
-                    Top:true,
+                    Top: true,
                 },
             });
             writer.close();
         }
         if (that.csvSmdPads) {
             var writer = new LogFile(that.csvSmdPads);
-            that.pcbx.writeCsv({ smdpads: writer });
+            that.pcbx.writeCsv({
+                smdpads: writer
+            });
             writer.close();
         }
         if (that.csvHoles) {
             var writer = new LogFile(that.csvHoles);
-            that.pcbx.writeCsv({ holes: writer });
+            that.pcbx.writeCsv({
+                holes: writer
+            });
             writer.close();
         }
         (that.png) && that.pcbx.writePng(that.png);
