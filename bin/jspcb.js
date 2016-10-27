@@ -58,6 +58,8 @@ const help = [
     "\t\tRead Gerber top soldermask file",
     "\t--txt PATH",
     "\t\tRead Gerber drill file",
+    "\t--show-bounds ",
+    "\t\tPrint out PCB bounding box",
     ""
 ];
 
@@ -103,6 +105,7 @@ const help = [
             }
         }
         xfm.gerberLayers = xfm.gerberLayers || {};
+        xfm.eagle = xfm.eagle || {};
         for (var iArg = 2; iArg < process.argv.length; iArg++) { // pass 2
             var arg = argv[iArg];
             switch (arg) {
@@ -171,6 +174,9 @@ const help = [
                 case '-j':
                 case '--json':
                     iArg++;
+                    break;
+                case '--show-bounds':
+                    xfm.showBounds = true;
                     break;
                 default:
                     console.log("unexpected argument:", arg);
