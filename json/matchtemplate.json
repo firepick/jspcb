@@ -1,5 +1,5 @@
 [
   {"op":"cvtColor", "code":"CV_BGR2GRAY"},
-  {"op":"matchTemplate", "name":"matches", "corr":"{{corr||0.85}}", "threshold":"{{threshold||0.50}}", "template":"doc/{{tmplt}}"},
+  {"op":"matchTemplate", "name":"matches", "corr":"{{corr||0.85}}", "threshold":"{{threshold||0.50}}", "template":"{{tmplt}}"},
   {"op":"drawRects", "model":"matches", "color":[255,32,32]}
 ]
