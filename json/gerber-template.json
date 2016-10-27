@@ -13,14 +13,15 @@
         "silkscreen":"#fff",
         "hole": "#000"
     },
-    "csv": {
-        "smdpads": "/tmp/smdpads.csv",
-        "holes": "/tmp/holes.csv"
+    "bounds": {
+        "l": 75.4,
+        "r": 100.8,
+        "t": 50.8,
+        "b": 25.4
     },
     "png": {
         "path": "/tmp/ruler-tmplt.png",
-        "width": 800,
-        "height": null
+        "width": 100
     },
     "svg": { 
         "path": "/tmp/ruler-tmplt.svg"

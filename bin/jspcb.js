@@ -75,7 +75,6 @@ const help = [
     JSPcb.prototype.transform = function(argv) {
         var that = this;
         var xfm = that.processArgs(argv);
-        xfm.verbose && console.log("jspcb command line");
         argv.length <= 2 && process.exit(that.showHelp());
         var pcbXfm = new PcbTransform(xfm);
         pcbXfm.transform();
@@ -98,9 +97,10 @@ const help = [
             switch (arg) {
                 case '-j':
                 case '--json':
-                    var transform = fs.readFileSync(argv[++iArg]);
+                    var jsonFile = argv[++iArg];
+                    var transform = fs.readFileSync(jsonFile);
                     xfm = JSON.parse(transform);
-                    xfm.verbose && console.log("JSON transform:", JSON.stringify(transform, null, " "));
+                    xfm.verbose && console.log("ARG\t: JSON transform:", jsonFile);
                     break;
             }
         }
