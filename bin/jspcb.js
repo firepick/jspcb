@@ -109,39 +109,43 @@ const LogFile = require("./../lib/logfile");
         that.xfm.verbose && console.log("jspcb command line");
         argv.length <= 2 && process.exit(showHelp());
 
-        if (that.xfm.eagle.path) {
-            that.pcbx.readEagleBrd(that.xfm.eagle.path);
-        } else if (Object.keys(that.xfm.gerber.layers).length) {
-            that.pcbx.readGerber(that.xfm.gerber.layers);
-        } else {
-            // do nothing
-        }
-        if (that.xfm.svg.path) {
-            var writer = new LogFile(that.xfm.svg.path);
-            that.pcbx.writeSvg({
-                writer: writer,
+        // inputs
+        var eagle = that.xfm.eagle || {};
+        if (eagle.path) {
+            that.pcbx.readEagleBrd(eagle.path);
+        } 
+        var gerber = that.xfm.gerber || {};
+        if (gerber.layers && Object.keys(gerber.layers).length) {
+            that.pcbx.readGerber(gerber.layers);
+        } 
+
+        // outputs
+        var svg = that.xfm.svg || {};
+        if (svg.path) {
+            var writer = new LogFile(svg.path);
+            that.pcbx.writeSvg(writer, {
                 layers: {
                     Top: true,
                 },
             });
             writer.close();
         }
-        if (that.xfm.csv.smdpads) {
-            var writer = new LogFile(that.xfm.csv.smdpads);
-            that.pcbx.writeCsv({
-                smdpads: writer
-            });
+        var csv = that.xfm.csv || {};
+        if (csv.smdpads) {
+            var writer = new LogFile(csv.smdpads);
+            that.pcbx.writeCsvSMdPads(writer, that.xfm);
             writer.close();
         }
-        if (that.xfm.csv.holes) {
-            var writer = new LogFile(that.xfm.csv.holes);
-            that.pcbx.writeCsv({
-                holes: writer
-            });
+        if (csv.holes) {
+            var writer = new LogFile(csv.holes);
+            that.pcbx.writeCsvHoles(writer);
             writer.close();
         }
-        (that.xfm.png.path) && that.pcbx.writePng(that.xfm.png);
-        return that;
+        var png = that.xfm.png || {};
+        if (png.path) {
+            that.pcbx.writePng(that.xfm);
+        }
+    return that;
     }
 
     function showHelp() {

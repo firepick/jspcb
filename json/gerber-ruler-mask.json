@@ -1,0 +1,24 @@
+{
+    "gerber": {
+        "layers": {
+            "gko":"gerber/ruler/Ruler.GKO",
+            "gtl":"gerber/ruler/Ruler.GTL",
+            "gto":"gerber/ruler/Ruler.GTO"
+        }
+    },
+    "colors": { 
+        "board": "#000",
+        "outline": "#fff",
+        "copper": "#b5814c",
+        "silkscreen":"#fff",
+        "hole": "#000"
+    },
+    "png": {
+        "path": "/tmp/ruler-tmplt.png",
+        "width": 800,
+        "height": null
+    },
+    "svg": { 
+        "path": "/tmp/ruler-tmplt.svg"
+    }
+}
