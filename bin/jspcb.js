@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+const fs = require('fs');
+const PcbTransform = require("./../lib/pcbtransform");
+
 const help = [
     "jspcb -- Javascript library for parsing PCB board files",
     "",
@@ -58,157 +61,84 @@ const help = [
     ""
 ];
 
-const fs = require('fs');
-const EagleBRD = require("./../lib/eaglebrd");
-const Gerber = require("./../lib/gerber");
-const PcbTransform = require("./../lib/pcbtransform");
-const LogFile = require("./../lib/logfile");
-
 (function(exports) {
 
-    function JSPcb(argv) {
+    function JSPcb() {
         var that = this;
-        that.pcbx = new PcbTransform();
-        that.xfm = {
-            verbose: false,
-            eagle: { //input
-                path: null,
-                layer: "Top",
-                show: "SMD",
-            },
-            gerber: { //input
-                layers: {},
-            },
-            bounds: { //output
-                l: 0,
-                t: null,
-                r: null,
-                b: 0,
-            },
-            csv: { // output
-            },
-            colors: { // output
-                "board": "#000",
-                "outline": "#000",
-                "pad": "#fff",
-                "text": "#444",
-                "hole": "#000"
-            },
-            png: { // output
-                path: null,
-                width: 800,
-                height: null,
-            },
-            svg: { // output
-                path: null,
-            },
-        };
-
-        that.processArgs(argv, that.xfm);
-
-        that.xfm.verbose && console.log("jspcb command line");
-        argv.length <= 2 && process.exit(showHelp());
-
-        // inputs
-        var eagle = that.xfm.eagle || {};
-        if (eagle.path) {
-            that.pcbx.readEagleBrd(eagle.path);
-        } 
-        var gerber = that.xfm.gerber || {};
-        if (gerber.layers && Object.keys(gerber.layers).length) {
-            that.pcbx.readGerber(gerber.layers);
-        } 
-
-        // outputs
-        var svg = that.xfm.svg || {};
-        if (svg.path) {
-            var writer = new LogFile(svg.path);
-            that.pcbx.writeSvg(writer, {
-                layers: {
-                    Top: true,
-                },
-            });
-            writer.close();
-        }
-        var csv = that.xfm.csv || {};
-        if (csv.smdpads) {
-            var writer = new LogFile(csv.smdpads);
-            that.pcbx.writeCsvSMdPads(writer, that.xfm);
-            writer.close();
-        }
-        if (csv.holes) {
-            var writer = new LogFile(csv.holes);
-            that.pcbx.writeCsvHoles(writer);
-            writer.close();
-        }
-        var png = that.xfm.png || {};
-        if (png.path) {
-            that.pcbx.writePng(that.xfm);
-        }
-    return that;
+        var pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json'));
+        that.version = pkg && pkg.version ? pkg.version : 'unknown';
+        return that;
     }
 
-    function showHelp() {
+    JSPcb.prototype.transform = function(argv) {
+        var that = this;
+        var xfm = that.processArgs(argv);
+        xfm.verbose && console.log("jspcb command line");
+        argv.length <= 2 && process.exit(that.showHelp());
+        var pcbXfm = new PcbTransform(xfm);
+        pcbXfm.transform();
+        return that;
+    }
+    JSPcb.prototype.showhelp = function() {
+        var that = this;
         for (var iHelp = 0; iHelp < help.length; iHelp++) {
             console.log(help[iHelp]);
         }
         return 0;
     }
-
-    JSPcb.prototype.parseJsonTransform = function(transform) {
+    JSPcb.prototype.processArgs = function(argv) {
         var that = this;
-        if ((typeof transform === "string") || (transform instanceof Buffer)) {
-            transform = JSON.parse(transform);
+        var xfm = {
+            verbose: false,
+        };
+        for (var iArg = 2; iArg < process.argv.length; iArg++) { // pass 1
+            var arg = argv[iArg];
+            switch (arg) {
+                case '-j':
+                case '--json':
+                    var transform = fs.readFileSync(argv[++iArg]);
+                    xfm = JSON.parse(transform);
+                    xfm.verbose && console.log("JSON transform:", JSON.stringify(transform, null, " "));
+                    break;
+            }
         }
-        transform = transform || {};
-        if (transform.bounds && transform.bounds.units) {
-            transform.bounds.l *= transform.bounds.units;
-            transform.bounds.t *= transform.bounds.units;
-            transform.bounds.r *= transform.bounds.units;
-            transform.bounds.b *= transform.bounds.units;
-        }
-        that.xfm = transform;
-        that.xfm.verbose && console.log("JSON transform:", JSON.stringify(transform, null, " "));
-    }
-
-    JSPcb.prototype.processArgs = function(argv, xfm) {
-        var that = this;
-        for (var iArg = 2; iArg < process.argv.length; iArg++) {
+        xfm.gerberLayers = xfm.gerberLayers || {};
+        for (var iArg = 2; iArg < process.argv.length; iArg++) { // pass 2
             var arg = argv[iArg];
             switch (arg) {
                 case '-v':
                 case '--version':
-                    console.log("JsPCB v" + that.pcbx.version());
+                    console.log("JsPCB v" + JSPCB.version);
                     break;
                 case '--gbl': // bottom copper
-                    xfm.gerber.layers.gtl = argv[++iArg];
+                    xfm.gerberLayers.gtl = argv[++iArg];
                     break;
                 case '--gbo': // bottom silkscreen
-                    xfm.gerber.layers.gbo = argv[++iArg];
+                    xfm.gerberLayers.gbo = argv[++iArg];
                     break;
                 case '--gbs': // bottom soldermask
-                    xfm.gerber.layers.gbs = argv[++iArg];
+                    xfm.gerberLayers.gbs = argv[++iArg];
                     break;
                 case '--gko': // Altima keepout board outline
-                    xfm.gerber.layers.gko = argv[++iArg];
+                    xfm.gerberLayers.gko = argv[++iArg];
                     break;
                 case '--gml': // mill
-                    xfm.gerber.layers.gml = argv[++iArg];
+                    xfm.gerberLayers.gml = argv[++iArg];
                     break;
                 case '--gtl': // top copper
-                    xfm.gerber.layers.gtl = argv[++iArg];
+                    xfm.gerberLayers.gtl = argv[++iArg];
                     break;
                 case '--gto': // top silkscreen
-                    xfm.gerber.layers.gto = argv[++iArg];
+                    xfm.gerberLayers.gto = argv[++iArg];
                     break;
                 case '--gtp': // top paste
-                    xfm.gerber.layers.gtp = argv[++iArg];
+                    xfm.gerberLayers.gtp = argv[++iArg];
                     break;
                 case '--gts': // top soldermask
-                    xfm.gerber.layers.gts = argv[++iArg];
+                    xfm.gerberLayers.gts = argv[++iArg];
                     break;
                 case '--txt': // drill file
-                    xfm.gerber.layers.txt = argv[++iArg];
+                    xfm.gerberLayers.txt = argv[++iArg];
                     break;
                 case '--svg': // SVG output file
                     xfm.svg.path = argv[++iArg];
@@ -240,8 +170,7 @@ const LogFile = require("./../lib/logfile");
                     break;
                 case '-j':
                 case '--json':
-                    var transform = fs.readFileSync(argv[++iArg]);
-                    that.parseJsonTransform(transform);
+                    iArg++;
                     break;
                 default:
                     console.log("unexpected argument:", arg);
@@ -249,16 +178,20 @@ const LogFile = require("./../lib/logfile");
                     break;
             }
         }
+        return xfm;
     }
 
     module.exports = exports.JSPcb = JSPcb;
 })(typeof exports === "object" ? exports : (exports = {}));
 
 var JSPcb = exports.JSPcb;
-var jspcb = new JSPcb(process.argv);
+var jspcb = new JSPcb();
+jspcb.transform(process.argv);
 
-(typeof describe === 'function') && describe("Gerber", function() {
+(typeof describe === 'function') && describe("JSPcb", function() {
     var should = require("should");
     var JSPcb = exports.JSPcb; // require("./jspcb");
-    // TODO
+    it("version returns package.json version", function() {
+        new JSPcb().version.should.equal("0.1.1");
+    })
 })

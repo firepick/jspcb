@@ -1,10 +1,8 @@
 {
-    "gerber": {
-        "layers": {
-            "gko":"gerber/ruler/Ruler.GKO",
-            "gtl":"gerber/ruler/Ruler.GTL",
-            "gto":"gerber/ruler/Ruler.GTO"
-        }
+    "gerberLayers": {
+        "gko":"gerber/ruler/Ruler.GKO",
+        "gtl":"gerber/ruler/Ruler.GTL",
+        "gto":"gerber/ruler/Ruler.GTO"
     },
     "colors": { 
         "board": "#000",
