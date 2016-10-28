@@ -101,6 +101,7 @@ const help = [
         xfm.eagle = xfm.eagle || {};
         xfm.svg = xfm.svg || {};
         xfm.csv = xfm.csv || {};
+        xfm.png = xfm.png || {};
         for (var iArg = 2; iArg < process.argv.length; iArg++) { // pass 2
             var arg = argv[iArg];
             switch (arg) {
