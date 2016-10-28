@@ -1,3 +1,7 @@
+0.1.2
+-----
+* FIX: silkscreen arcs and rectangles not showing in Gerber->SVG
+
 0.1.1
 -----
 * use SVG circle for Gerber 360 degree arcs
