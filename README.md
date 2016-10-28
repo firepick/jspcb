@@ -35,9 +35,10 @@ To generate a CSV file of the SMD pads:
 `jspcb --eagle eagle/ruler.brd --csv-smdpads /tmp/pads.csv`
 
 #### Generate PCB matching template
-Generate a FireSight and/or OpenCV PNG matching template from Gerber files using a **jspcb** JSON configuration file.
+Generate a FireSight and/or OpenCV PNG matching template from Gerber files using a 
+**jspcb** [JSON configuration file](https://github.com/firepick/jspcb/blob/master/json/gerber-template.json):
 
-`jspcb --json json/gerber-template.json --png /tmp/ruler.png`
+`jspcb --json json/gerber-template.json`
 
 <a href="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png"> 
     <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png" height=200px></a>
