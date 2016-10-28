@@ -6,6 +6,8 @@ formats:
 
 * <a href="file:///home/chronos/u-a7a1ed9f0b86bfc3924e4a621e22cffc1868821a/Downloads/eagle416r2_help_en.pdf">Eagle BRD (XML)</a>
 
+[See the wiki](https://github.com/firepick/jspcb/wiki)
+
 ### Install
 To install **jspcb** command line wrapper and dependencies:
 
@@ -32,4 +34,9 @@ To generate a CSV file of the SMD pads in layer 16:
 
 `jspcb --eagle eagle/ruler.brd -o csv --layer 16`
 
+#### Generate PCB matching template
+Generate an matching template for use with FireSight or OpenCV.
+
+<a href="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png"> 
+    <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png" height=200px></a>
 
