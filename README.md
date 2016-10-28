@@ -41,4 +41,6 @@ Generate a FireSight and/or OpenCV PNG matching template from Gerber files using
 
 <a href="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png"> 
     <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png" height=200px></a>
+<a href="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-match.png"> 
+    <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-match.png" height=200px></a>
 
