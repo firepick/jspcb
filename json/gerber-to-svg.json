@@ -14,7 +14,7 @@
     },
     "png": {
         "path": "/tmp/ruler.png",
-        "width": 800,
+        "width": 800
     },
     "svg": { 
         "path": "/tmp/ruler.svg"
