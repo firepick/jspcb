@@ -113,7 +113,7 @@ const help = [
             switch (arg) {
                 case '-v':
                 case '--version':
-                    console.log("JsPCB v" + JSPCB.version);
+                    console.log("JsPCB v" + new JSPcb().version);
                     break;
                 case '--gbl': // bottom copper
                     xfm.gerberLayers.gtl = argv[++iArg];
