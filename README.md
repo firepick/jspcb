@@ -5,6 +5,7 @@ client in the context of automated pick-and-place (PnP). Supported PCB file
 formats:
 
 * <a href="file:///home/chronos/u-a7a1ed9f0b86bfc3924e4a621e22cffc1868821a/Downloads/eagle416r2_help_en.pdf">Eagle BRD (XML)</a>
+* Gerber files (Altium/Protel extension semantics)
 
 [See the wiki](https://github.com/firepick/jspcb/wiki)
 
