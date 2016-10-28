@@ -24,18 +24,21 @@ Convert XML Eagle BRD file such as the
 into its 
 <a href="https://raw.githubusercontent.com/firepick/jspcb/master/eagle/ruler.svg">SVG equivalent</a>
 
-`jspcb --eagle eagle/ruler.brd -o svg`
+`jspcb --eagle eagle/ruler.brd --svg /tmp/ruler.svg`
 
 <a href="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler.png">
     <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler.png" height="200px"></a>
 
 #### Generate CSV file with SMD pads
-To generate a CSV file of the SMD pads in layer 16:
+To generate a CSV file of the SMD pads:
 
-`jspcb --eagle eagle/ruler.brd -o csv --layer 16`
+`jspcb --eagle eagle/ruler.brd --csv-smdpads /tmp/pads.csv`
 
 #### Generate PCB matching template
-Generate an matching template for use with FireSight or OpenCV.
+Generate a PNG matching template for use with FireSight or OpenCV from Gerber files using a JSON transformation
+file for configuring **jspcb**.
+
+`jspcb --json json/gerber-template.json --png /tmp/ruler.png`
 
 <a href="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png"> 
     <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-tmplt.png" height=200px></a>
