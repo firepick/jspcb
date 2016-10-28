@@ -58,8 +58,10 @@ const help = [
     "\t\tRead Gerber top soldermask file",
     "\t--txt PATH",
     "\t\tRead Gerber drill file",
+    "\t--bounds L,T,R,B",
+    "\t\tSet PCB view bounds to given mm coordinates",
     "\t--show-bounds ",
-    "\t\tPrint out PCB bounding box",
+    "\t\tPrint out PCB view bounds",
     ""
 ];
 
@@ -102,6 +104,7 @@ const help = [
         xfm.svg = xfm.svg || {};
         xfm.csv = xfm.csv || {};
         xfm.png = xfm.png || {};
+        xfm.bounds = xfm.bounds || {};
         for (var iArg = 2; iArg < process.argv.length; iArg++) { // pass 2
             var arg = argv[iArg];
             switch (arg) {
@@ -170,6 +173,17 @@ const help = [
                 case '-j':
                 case '--json':
                     iArg++;
+                    break;
+                case '--bounds':
+                    var bounds = argv[++iArg].split(",");
+                    if (bounds.length !== 4) {
+                        throw new Error("--bounds requires four comma-separated values (l,t,r,b)");
+                    }
+                    xfm.bounds.l = Math.min(Number(bounds[0]), Number(bounds[2]));
+                    xfm.bounds.t = Math.max(Number(bounds[1]), Number(bounds[3]));
+                    xfm.bounds.r = Math.max(Number(bounds[0]), Number(bounds[2]));
+                    xfm.bounds.b = Math.min(Number(bounds[1]), Number(bounds[3]));
+                    xfm.showBounds = true;
                     break;
                 case '--show-bounds':
                     xfm.showBounds = true;
