@@ -1,3 +1,7 @@
+0.1.5
+-----
+* FIX: --version crashes
+
 0.1.4
 -----
 * FIX: README examples did not work
