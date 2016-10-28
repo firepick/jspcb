@@ -75,17 +75,10 @@ const help = [
     JSPcb.prototype.transform = function(argv) {
         var that = this;
         var xfm = that.processArgs(argv);
-        argv.length <= 2 && process.exit(that.showHelp());
+        argv.length <= 2 && process.exit(showHelp());
         var pcbXfm = new PcbTransform(xfm);
         pcbXfm.transform();
         return that;
-    }
-    JSPcb.prototype.showhelp = function() {
-        var that = this;
-        for (var iHelp = 0; iHelp < help.length; iHelp++) {
-            console.log(help[iHelp]);
-        }
-        return 0;
     }
     JSPcb.prototype.processArgs = function(argv) {
         var that = this;
@@ -187,6 +180,14 @@ const help = [
             }
         }
         return xfm;
+    }
+
+    function showHelp() {
+        var that = this;
+        for (var iHelp = 0; iHelp < help.length; iHelp++) {
+            console.log(help[iHelp]);
+        }
+        return 0;
     }
 
     module.exports = exports.JSPcb = JSPcb;
