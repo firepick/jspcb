@@ -35,8 +35,7 @@ To generate a CSV file of the SMD pads:
 `jspcb --eagle eagle/ruler.brd --csv-smdpads /tmp/pads.csv`
 
 #### Generate PCB matching template
-Generate a PNG matching template for use with FireSight or OpenCV from Gerber files using a JSON transformation
-file for configuring **jspcb**.
+Generate a FireSight and/or OpenCV PNG matching template from Gerber files using a **jspcb** JSON configuration file.
 
 `jspcb --json json/gerber-template.json --png /tmp/ruler.png`
 
