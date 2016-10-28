@@ -14,9 +14,7 @@ To install **jspcb** command line wrapper and dependencies:
 
 `npm install -g jspcb`
 
-NOTE: You may need to do this:
-
-`sudo npm install -g jspcb`
+NOTE: The above requires that your user be able to write to /usr/local. 
 
 ### Command line
 #### Generate SVG file from Eagle BRD
