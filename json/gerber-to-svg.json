@@ -1,23 +1,9 @@
 {
-    "verbose": false,
-    "eagle": {
-        "path": null,
-        "layer": "Top",
-        "show": "SMD"
-    },
     "gerberLayers": {
         "gko":"gerber/ruler/Ruler.GKO",
         "gtl":"gerber/ruler/Ruler.GTL",
         "gts":"gerber/ruler/Ruler.GTS",
         "gto":"gerber/ruler/Ruler.GTO"
-    },
-    "bounds": { 
-        "l": 0,
-        "t": null,
-        "r": null,
-        "b": 0
-    },
-    "csv": { 
     },
     "colors": { 
         "board": "#000",
@@ -29,7 +15,6 @@
     "png": {
         "path": "/tmp/ruler.png",
         "width": 800,
-        "height": null
     },
     "svg": { 
         "path": "/tmp/ruler.svg"
