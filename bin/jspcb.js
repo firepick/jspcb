@@ -95,6 +95,7 @@ const help = [
                     var jsonFile = argv[++iArg];
                     var transform = fs.readFileSync(jsonFile);
                     xfm = JSON.parse(transform);
+                    xfm.bounds && xfm.bounds.src == null && (xfm.bounds.source = jsonFile);
                     xfm.verbose && console.log("ARG\t: JSON transform:", jsonFile);
                     break;
             }
