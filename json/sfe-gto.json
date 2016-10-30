@@ -1,0 +1,27 @@
+{
+    "verbose": true,
+    "gerberLayers": {
+        "gtl":"gerber/sparkfun/Ruler.GTL",
+        "gto":"gerber/sparkfun/Ruler.GTO"
+    },
+    "colors": { 
+        "board": "#000",
+        "outline": "#fff",
+        "copper": "#b5814c",
+        "silkscreen":"#fff",
+        "hole": "#000"
+    },
+    "bounds": {
+        "l": 50,
+        "r": 75.4,
+        "t": 25.4,
+        "b": 0
+    },
+    "png": {
+        "path": "/tmp/sfe-gto.png",
+        "width": 100
+    },
+    "svg": { 
+        "path": "/tmp/sfe-gto.svg"
+    }
+}

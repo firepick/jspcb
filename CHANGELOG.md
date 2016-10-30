@@ -1,3 +1,10 @@
+0.1.10
+------
+* NEW: command line JSON configuration 
+* NEW: color.border for PCB border
+* NEW: increased sensitivity for FireSight matchtemplate.json
+* NEW: more examples for PCB matching
+
 0.1.9
 -----
 * FIX: user-specified bounds ignored
@@ -25,7 +32,7 @@
 
 0.1.2
 -----
-* FIX: silkscreen arcs and rectangles not showing in Gerber->SVG
+* FIX: silkscreen arcs and rectangles not showing in Gerber to SVG
 
 0.1.1
 -----

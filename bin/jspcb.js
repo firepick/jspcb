@@ -77,6 +77,7 @@ const help = [
     JSPcb.prototype.transform = function(argv) {
         var that = this;
         var xfm = that.processArgs(argv);
+        xfm.verbose && console.warn("XFM\t:", JSON.stringify(xfm));
         argv.length <= 2 && process.exit(showHelp());
         var pcbXfm = new PcbTransform(xfm);
         pcbXfm.transform();
@@ -106,6 +107,7 @@ const help = [
         xfm.csv = xfm.csv || {};
         xfm.png = xfm.png || {};
         xfm.bounds = xfm.bounds || {};
+        xfm.colors = xfm.colors || {};
         for (var iArg = 2; iArg < process.argv.length; iArg++) { // pass 2
             var arg = argv[iArg];
             switch (arg) {
@@ -190,8 +192,16 @@ const help = [
                     xfm.showBounds = true;
                     break;
                 default:
-                    console.log("unexpected argument:", arg);
-                    process.exit(22);
+                    var tokens = arg.substring(2).split(".");
+                    if (tokens.length === 2) {
+                        var key = tokens[0];
+                        var attr = tokens[1];
+                        var obj = xfm[key] = xfm[key] || {};
+                        obj[attr] = argv[++iArg];
+                    } else {
+                        console.log("unexpected argument:", arg);
+                        process.exit(22);
+                    }
                     break;
             }
         }

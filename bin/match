@@ -1,0 +1,5 @@
+#!/bin/bash
+
+FILE=$1
+
+firesight -p json/matchtemplate.json -i doc/ruler-cam90.jpg -o /tmp/$FILE-match.png -Dtmplt=/tmp/$FILE.png
