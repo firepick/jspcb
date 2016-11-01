@@ -1,3 +1,7 @@
+0.1.12
+------
+* NEW: jspcb version moved to PcbTransform
+
 0.1.11
 ------
 * FIX: jspcb library use in nodejs

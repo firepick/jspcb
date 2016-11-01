@@ -69,8 +69,7 @@ const help = [
 
     function JSPcb() {
         var that = this;
-        var pkg = JSON.parse(fs.readFileSync(__dirname + '/../package.json'));
-        that.version = pkg && pkg.version ? pkg.version : 'unknown';
+        that.version = new PcbTransform().version();
         return that;
     }
 
