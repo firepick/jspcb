@@ -1,3 +1,7 @@
+0.1.12
+------
+* FIX: jspcb library use in nodejs
+
 0.1.10
 ------
 * NEW: command line JSON configuration 
