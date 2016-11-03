@@ -46,29 +46,36 @@ Generate a FireSight and/or OpenCV PNG matching template from Gerber files using
     <img src="https://raw.githubusercontent.com/firepick/jspcb/master/doc/ruler-match.png" height=200px></a>
 
 ### Node.js usage
-#### Scripts
-You can use `jspcb` classes directly in a Node.js script (with NODE_PATH appropriately set to your global node_modules):
+#### Local scripts
+The `jspcb` command line is just a wrapper around PcbTransform,
+which does the actual transformation.
+You can call PcbTransform directly with custom options.
+Here is a local script to print out the bounding rectangle of a PCB: 
 
 <pre>
 const jspcb = require("jspcb");
-const PcbTransform = jspcb.PcbTransform;
-
-var pcbTrans = new PcbTransform({
-    eagle: {
-        path: "eagle/ruler.brd",
-    },
-});
+var options = {
+    eagle: { path: "eagle/ruler.brd", },
+};
+var pcbTrans = new jspcb.PcbTransform(options);
 console.log(pcbTrans.viewBounds());
 </pre>
+
+The script does the same thing as:
+
+`jspcb --eagle eagle/ruler.brd --show-bounds`
+
+NOTE: The above script won't work in the Github `jspcb` folder itself unless
+you set your environment NODE_PATH property to the global or local `node_modules`
+that has your jspcb installation. E.g.:
+
+`export NODE_PATH=node_modules`
 
 #### Web server
 Do not use `jspcb` as a library from within a Node.js web applications. 
 Node.js is single threaded, and you
 will block your entire web application when reading in PCB files. 
-Instead, install `jspcb` globally and spawn a child
-process to invoke jspcb with command line arguments such as `--json-out`.
-Alternatively, you can also spawn a child process to call a jspcb Node.js script as described above.
-Either method will allow you to generate the output files needed by your web application.
-Spawning a child process will allow Node.js to run unencumbered and 
-your web application can then look for and consume the newly generated JSON file(s) as
-they appear.
+Instead, spawn a child process to perform your transformation.
+Spawning a child process will allow Node.js to run unencumbered--your
+web application will look for and 
+consume the asynchronously generated JSON file(s) as they appear.
