@@ -1,3 +1,7 @@
+0.1.14
+------
+* DOC: documentation describing use with Node.js
+
 0.1.13
 ------
 * NEW: --json-out writes JSON PCB description
