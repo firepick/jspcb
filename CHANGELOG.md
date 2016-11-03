@@ -1,3 +1,7 @@
+0.1.13
+------
+* NEW: --json-out writes JSON PCB description
+
 0.1.12
 ------
 * NEW: jspcb version moved to PcbTransform

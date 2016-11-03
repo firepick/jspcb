@@ -24,6 +24,8 @@ const help = [
     "\t\tPrint verbose output",
     "\t-j --json TRANSFORMFILE",
     "\t\tRun transformations specified in given JSON file",
+    "\t--json-out JSONFILE",
+    "\t\tWrite JSON PCB description to given JSON file",
     "\t-h --help",
     "\t\tPrint these instructions",
     "\t--csv-holes PATH",
@@ -146,6 +148,10 @@ const help = [
                     break;
                 case '--svg': // SVG output file
                     xfm.svg.path = argv[++iArg];
+                    break;
+                case '--json-out':
+                    xfm.json = xfm.json || {};
+                    xfm.json.path = argv[++iArg];
                     break;
                 case '--csv-holes': // CSV output file
                     xfm.csv.holes = argv[++iArg];
