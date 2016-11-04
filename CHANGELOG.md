@@ -1,3 +1,8 @@
+0.1.15
+------
+* NEW: LogFile.close() returns promise resolved when output stream is written.
+* NEW: PcbTransform.transform() returns promise resolved when all outputs have been written.
+
 0.1.14
 ------
 * DOC: documentation describing use with Node.js
