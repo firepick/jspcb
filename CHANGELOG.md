@@ -1,3 +1,8 @@
+0.1.16
+------
+* REFACTOR: PcbSvgFactory.create renamed as writeDocument
+* NEW: view box with background and border color 
+
 0.1.15
 ------
 * NEW: LogFile.close() returns promise resolved when output stream is written.
