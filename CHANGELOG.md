@@ -1,3 +1,7 @@
+0.1.18
+------
+* FIX: precision bug
+
 0.1.17
 ------
 * NEW: precision option
