@@ -198,7 +198,10 @@ const help = [
                     break;
                 default:
                     var tokens = arg.substring(2).split(".");
-                    if (tokens.length === 2) {
+                    if (tokens.length === 1) {
+                        var attr = tokens[0];
+                        xfm[attr] = argv[++iArg];
+                    } else if (tokens.length === 2) {
                         var key = tokens[0];
                         var attr = tokens[1];
                         var obj = xfm[key] = xfm[key] || {};

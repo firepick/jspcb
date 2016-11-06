@@ -1,3 +1,7 @@
+0.1.17
+------
+* NEW: precision option
+
 0.1.16
 ------
 * REFACTOR: PcbSvgFactory.create renamed as writeDocument
